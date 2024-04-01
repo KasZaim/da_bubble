@@ -1,0 +1,21 @@
+<main>
+    <section class="header">
+        <div class="logo" (click)="this.router.navigateByUrl('')">
+            <img src="../../../assets/img/logo/icon.svg">
+            <img src="../../../assets/img/logo/name.svg" alt="DABubble">
+        </div>
+        @if(this.router.url === '/login') {
+            <div>
+                <p>Neu bei DABubble?</p>
+                <a href="./signup">Konto erstellen</a>
+            </div>
+        }
+    </section>
+    <section class="content">
+        <ng-content></ng-content>
+    </section>
+    <section class="footer">
+        <a href="#">Impressum</a>
+        <a href="#">Datenschutz</a>
+    </section>
+</main>

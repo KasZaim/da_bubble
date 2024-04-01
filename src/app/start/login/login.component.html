@@ -1,0 +1,33 @@
+<app-start>
+    <div class="description">
+        <h1>Anmeldung</h1>
+        <p>Wir empfehlen dir, die E-Mail-Adresse zu nutzen, die du bei der Arbeit verwendest.</p>
+    </div>
+    <form>
+        <div class="upper-container">
+            <div>
+                <input type="email" placeholder="beispielname@email.com" id="email">
+                <img src="../../../assets/img/icons/mail-gray.svg">
+            </div>
+            <div>
+                <input type="password" placeholder="Passwort" id="password">
+                <img src="../../../assets/img/icons/lock-gray.svg">
+            </div>
+            <a href="./recovery">Passwort vergessen?</a>
+        </div>
+        <div class="middle-container">
+            <span>ODER</span>
+            <div class="vector"></div>
+        </div>
+        <div class="lower-container">
+            <button mat-flat-button class="google">
+                <img src="../../../assets/img/icons/google.svg">
+                Anmelden mit Google
+            </button>
+            <div>
+                <button mat-flat-button class="submit">Anmelden</button>
+                <button mat-stroked-button class="gast-login">Gäste-Login</button>
+            </div>
+        </div>
+    </form>
+</app-start>

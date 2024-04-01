@@ -9,11 +9,8 @@
   opacity: 1;
   animation: fadeOut forwards;
   animation-duration: 2s;
-  animation-delay: 4s;
-}
-.animate__slideInRight {
-  z-index: 99;
-  
+  animation-delay: 3s;
+
 }
 
 .logo {
@@ -21,29 +18,72 @@
   align-items: center;
   gap: 1rem;
   align-self: flex-start;
-  animation: slideUpLeft 2s forwards;
-  > img:last-child {
+
+  >img:first-child {
+    width: 4.375rem;
+    height: 4.375rem;
+  }
+
+  >img:last-child {
     width: 9.75663rem;
     height: 1.5rem;
+  }
+}
+
+.animation-logo {
+  z-index: 99;
+  position: absolute;
+  top: 40%;
+  animation: slideUpLeft 2s forwards;
+  animation-delay: 2.5s;
+  display: flex;
+  opacity: 1;
+  align-items: center;
+
+  >img:first-child {
+    width: 150px;
+    height: 150px;
+    animation: slideInRight;
+    animation-duration: 1s ;
+    z-index: 1000;
+  }
+
+  >img:last-child {
+    height: 50px;
+    opacity: 0;
+    animation: slideinLeft forwards;
+    animation-duration: 1s ;
+    animation-delay: 1s;
   }
 }
 
 @keyframes slideUpLeft {
   0% {
     /* Start in der Mitte des Bildschirms */
-    transform: translate(-50%, -50%);
-    opacity: 0;
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
     position: fixed;
     left: 50%;
     top: 50%;
   }
+
   100% {
-    /* Bewegung zur ursprünglichen Position */
-    transform: translate(0, 0);
-    opacity: 1;
+    transform: translate(-20%, -10%) scale(0.5);
+    opacity: 0;
     position: fixed;
     left: 0;
     top: 0;
+  }
+}
+@keyframes slideinLeft {
+  0% {
+    transform: translateX(-160px);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateX(20px);
+    opacity: 1;
   }
 }
 
@@ -62,17 +102,17 @@ main {
   justify-content: space-between;
   width: 100%;
 
-  > div:not(.logo) {
+  >div:not(.logo) {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
     gap: 0.625rem;
 
-    > p {
+    >p {
       font-size: 1.125rem;
     }
 
-    > a {
+    >a {
       line-height: 120%;
       padding: 0.625rem 0.9375rem;
     }
@@ -84,17 +124,17 @@ main {
   justify-content: space-between;
   width: 100%;
 
-  > div:not(.logo) {
+  >div:not(.logo) {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
     gap: 0.625rem;
 
-    > p {
+    >p {
       font-size: 1.125rem;
     }
 
-    > a {
+    >a {
       line-height: 120%;
       padding: 0.625rem 0.9375rem;
     }
@@ -106,7 +146,7 @@ main {
   align-items: flex-start;
   gap: 1rem;
 
-  > a {
+  >a {
     padding: 0.625rem 0.9375rem;
   }
 }

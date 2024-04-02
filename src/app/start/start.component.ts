@@ -11,7 +11,6 @@ import'animate.css';
   styleUrl: './start.component.scss',
 })
 export class StartComponent {
-
   constructor(public router: Router) {
     
   }

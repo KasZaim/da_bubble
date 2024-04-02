@@ -1,53 +1,3 @@
-main {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    height: calc(100vh - 4.6875rem - 3rem);
-    margin: 4.6875rem 4.6875rem 3rem 4.6875rem;
-    // TODO: change spaces
-}
-
-.logo {
-    display: inline-flex;
-    align-items: center;
-    gap: 1rem;
-    align-self: flex-start;
-
-    >img:first-child {
-        width: 4.375rem;
-        height: 4.375rem;
-    }
-
-    >img:last-child {
-        width: 9.75663rem;
-        height: 1.5rem;
-    }
-}
-
-.footer {
-    display: inline-flex;
-    align-items: flex-start;
-    gap: 1rem;
-
-    >a {
-        padding: 0.625rem 0.9375rem;
-    }
-}
-
-.content {
-    position: relative;
-    width: calc(37.875rem - 3.3125rem - 3.3125rem);
-    height: calc(41.8125rem - 2.5rem - 2.5rem);
-    padding: 2.5rem 3.3125rem;
-    flex-shrink: 0;
-    border-radius: 1.875rem;
-    background: var(--white);
-
-    /* header */
-    box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.08);
-}
-
 .goBack {
     position: absolute;
     top: 2.8125rem;
@@ -141,7 +91,7 @@ mat-checkbox {
 // TODO: change checkbox checked color
 
 ::ng-deep::ng-deep .mat-mdc-checkbox label {
-    color: var(--menu-color, #42526E);
+    color: var(--menu-color);
 
     /* Version 2/body */
     font-family: "Open Sans";
@@ -156,15 +106,12 @@ mat-checkbox {
 .submit {
     align-self: flex-end;
     width: min-content;
+    padding: 0 1.5625rem;
+    height: 3.0625rem;
 
     ::ng-deep::ng-deep .mat-mdc-button-persistent-ripple {
-        display: flex;
-        padding: 0.75rem 1.5625rem;
-        justify-content: center;
-        align-items: center;
-        gap: 0.625rem;
         border-radius: 1.5625rem;
-        background: var(--Purple-1, #444DF2);
+        background: var(--purple-1);
         overflow: hidden;
     }
 
@@ -174,13 +121,12 @@ mat-checkbox {
     }
 
     ::ng-deep::ng-deep .mdc-button__label {
-        color: var(--White, #FFF);
+        color: var(--white);
         font-family: Nunito;
         font-size: 1.125rem;
+        padding: 0;
         font-style: normal;
         font-weight: 700;
         line-height: normal;
     }
-
-
 }

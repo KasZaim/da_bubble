@@ -1,0 +1,132 @@
+.goBack {
+    position: absolute;
+    top: 2.8125rem;
+    left: 2rem;
+    padding: 0.5rem;
+    width: 2.5rem;
+    height: 2.5rem;
+
+    >img {
+        width: 1.5rem;
+        height: 1.5rem;
+
+    }
+}
+
+.description {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 2.5rem;
+
+    >h1 {
+        color: var(--purple-1);
+        font-size: 2.875rem;
+        line-height: 120%;
+    }
+
+    >p {
+        text-align: center;
+        font-size: 1.25rem;
+        line-height: 120%;
+    }
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+    margin-bottom: 2rem;
+
+    >div {
+        position: relative;
+
+        >input {
+
+            border: 0;
+            width: calc(100% - 2rem - 5.375rem);
+            padding: 1.125rem 2rem 1.125rem 5.375rem;
+            border-radius: 6.25rem;
+            background: var(--bg-color);
+            color: var(--text-gray);
+            font-size: 18px;
+            font-weight: 500;
+            line-height: 120%;
+            /* 21.6px */
+
+            &::placeholder {
+                color: var(--text-gray);
+                font-size: 18px;
+                font-weight: 500;
+                line-height: 120%;
+            }
+        }
+
+        >img {
+            width: 1.5rem;
+            height: 1.5rem;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 2rem;
+            margin: auto 0;
+        }
+    }
+}
+
+mat-checkbox {
+    margin-top: -0.5rem;
+
+    ::ng-deep::ng-deep .mdc-checkbox .mdc-checkbox__native-control:enabled:not(:checked):not(:indeterminate):not([data-indeterminate=true])~.mdc-checkbox__background {
+        border-color: var(--purple-2);
+    }
+
+    a {
+        padding: 0.3125rem 0.25rem;
+    }
+}
+
+// TODO: change checkbox checked color
+
+::ng-deep::ng-deep .mat-mdc-checkbox label {
+    color: var(--menu-color);
+
+    /* Version 2/body */
+    font-family: "Open Sans";
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 120%;
+    /* 1.2rem */
+}
+
+
+.submit {
+    align-self: flex-end;
+    width: min-content;
+    padding: 0 1.5625rem;
+    height: 3.0625rem;
+
+    ::ng-deep::ng-deep .mat-mdc-button-persistent-ripple {
+        border-radius: 1.5625rem;
+        background: var(--purple-1);
+        overflow: hidden;
+    }
+
+    ::ng-deep::ng-deep .mat-mdc-button-ripple {
+        border-radius: 1.5625rem;
+        overflow: hidden;
+    }
+
+    ::ng-deep::ng-deep .mdc-button__label {
+        color: var(--white);
+        font-family: Nunito;
+        font-size: 1.125rem;
+        padding: 0;
+        font-style: normal;
+        font-weight: 700;
+        line-height: normal;
+    }
+}

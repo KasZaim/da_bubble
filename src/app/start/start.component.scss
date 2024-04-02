@@ -5,12 +5,24 @@
   right: 0;
   left: 0;
   background: linear-gradient(1.46deg, #313ae6 1.22%, #797ef3 98.76%);
-  z-index: 99;
+  z-index: 2;
   opacity: 1;
   animation: fadeOut forwards;
   animation-duration: 2s;
   animation-delay: 3s;
 
+}
+
+@keyframes fadeOut{
+  from{
+    z-index: 2;
+    opacity: 1;
+  }
+
+  to{
+    z-index: 0;
+    opacity: 0;
+  }
 }
 
 .logo {
@@ -38,6 +50,7 @@
   animation-delay: 2.5s;
   display: flex;
   opacity: 1;
+  z-index: 2;
   align-items: center;
 
   >img:first-child {
@@ -65,6 +78,11 @@
     position: fixed;
     left: 50%;
     top: 50%;
+    z-index: 2;
+  }
+
+  75%{
+    z-index: 2;
   }
 
   100% {
@@ -73,8 +91,10 @@
     position: fixed;
     left: 0;
     top: 0;
+    z-index: 0;
   }
 }
+
 @keyframes slideinLeft {
   0% {
     transform: translateX(-160px);
@@ -86,7 +106,6 @@
     opacity: 1;
   }
 }
-
 
 main {
   display: flex;
@@ -101,6 +120,7 @@ main {
   display: flex;
   justify-content: space-between;
   width: 100%;
+  z-index: 1;
 
   >div:not(.logo) {
     display: flex;

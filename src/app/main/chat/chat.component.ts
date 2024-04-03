@@ -1,10 +1,12 @@
 import { Dialog } from '@angular/cdk/dialog';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import { MatDialog, MatDialogModule} from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { DialogAddMemberToChnlComponent } from '../../dialog-add-member-to-chnl/dialog-add-member-to-chnl.component';
+import {MatMenu, MatMenuModule, MatMenuTrigger} from '@angular/material/menu';
+import { DialogChannelInfoComponent } from '../../dialog-channel-info/dialog-channel-info.component';
 
 @Component({
   selector: 'app-chat',
@@ -13,8 +15,8 @@ import { DialogAddMemberToChnlComponent } from '../../dialog-add-member-to-chnl/
     MatButtonModule,
     MatIconModule,
     CommonModule,
-    MatDialogModule
-
+    MatDialogModule,
+    MatMenuModule
   ],
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.scss'
@@ -58,7 +60,7 @@ export class ChatComponent {
   }
 
   objectValues(obj: object) {
-    return Object.values(obj);
+    return Object.values(obj); 
   }
 
   objectKeysLength(obj: object | string) {
@@ -67,7 +69,13 @@ export class ChatComponent {
 
   openDialogAddMembers(){
     this.dialog.open(DialogAddMemberToChnlComponent,{
-      panelClass:'custom-dialog-br'
+      panelClass:'custom-dialog-br',
+    })
+  }
+
+  openDialogChannelInfo(){
+    this.dialog.open(DialogChannelInfoComponent,{
+      panelClass:'custom-dialog-br',
     })
   }
 }

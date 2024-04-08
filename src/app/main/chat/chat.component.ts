@@ -7,7 +7,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { DialogAddMemberToChnlComponent } from '../../dialog-add-member-to-chnl/dialog-add-member-to-chnl.component';
 import { MatMenu, MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { DialogChannelInfoComponent } from '../../dialog-channel-info/dialog-channel-info.component';
+import { DialogShowChannelMemberComponent } from '../../dialog-show-channel-member/dialog-show-channel-member.component';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
+import { DialogEditMessageComponent } from '../../dialog-edit-message/dialog-edit-message.component';
 import { ActivatedRoute,Router } from '@angular/router';
 
 @Component({
@@ -28,6 +30,7 @@ export class ChatComponent {
   isPickerVisible = false;
   messages = [
     {
+      id: 1,
       avatar: '4',
       name: 'Noah Braun',
       time: '14:25 Uhr',
@@ -37,6 +40,7 @@ export class ChatComponent {
       }
     },
     {
+      id: 2,
       avatar: '5',
       name: 'Sofia Müller',
       time: '14:30 Uhr',
@@ -46,6 +50,7 @@ export class ChatComponent {
       }
     },
     {
+      id: 3,
       avatar: '6',
       name: 'Frederik Beck',
       time: '15:06 Uhr',
@@ -85,6 +90,16 @@ export class ChatComponent {
     })
   }
 
+  openDialogEditMessage(id: number){
+    const message = this.messages.find((message) => message.id === id)
+    if (message === undefined) throw new Error(`Couldn't find message with id ${id}`);
+    this.dialog.open(DialogEditMessageComponent,{
+      panelClass:'custom-dialog-br',
+      data: {message : message.message}
+    })
+  }
+
+
   openDialogChannelInfo() {
     this.dialog.open(DialogChannelInfoComponent, {
       panelClass: 'custom-dialog-br',
@@ -92,5 +107,29 @@ export class ChatComponent {
   }
   navigateToThread() {
     this.router.navigate(['/main', {outlets: {'threadOutlet': ['thread']}}]);
+  }
+
+  openDialogShowMembers(){
+    this.dialog.open(DialogShowChannelMemberComponent,{
+      panelClass:'custom-dialog-br',
+    })
+  }
+  openDialog(event: MouseEvent): void {
+    let element = event.target as Element | null;
+
+    if (element) {
+      let htmlElement = element as HTMLElement;
+      let boundingClientRect = htmlElement.getBoundingClientRect();
+
+      let dialogPosition = {
+        top: `${boundingClientRect.bottom + window.scrollY + 15}px`,
+        left: `${boundingClientRect.left + window.scrollX - 280}px`,
+      };
+
+      this.dialog.open(DialogShowChannelMemberComponent, { // Ersetzen Sie DialogSomeComponent durch Ihre tatsächliche Dialogkomponente
+        width: '350px',
+        position: dialogPosition,
+      });
+    }
   }
 }

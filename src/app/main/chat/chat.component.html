@@ -19,7 +19,7 @@
             <!-- TODO: Add answers to thread amount -->
             <div class="message" *ngFor="let message of messages">
                 <div class="hoverMenu">
-                    <button mat-icon-button>
+                    <button mat-icon-button >
                         <img src="../../../assets/img/icons/emoji-check.svg" alt="React">
                     </button>
                     <button mat-icon-button>
@@ -44,7 +44,7 @@
                         <h5>{{ message.name }}</h5>
                         <span>{{ message.time }}</span>
                     </div>
-                    <div class="message-text">{{ message.message }}</div>
+                    <div class="message-text" (click)="navigateToThread()">{{ message.message }}</div>
                     <div>
                         <div class="reaction">
                             @if(objectKeysLength(message.reactions) > 0) {

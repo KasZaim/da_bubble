@@ -1,13 +1,14 @@
 import { Dialog } from '@angular/cdk/dialog';
 import { CommonModule } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
-import {MatButtonModule} from '@angular/material/button';
-import { MatDialog, MatDialogModule} from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { DialogAddMemberToChnlComponent } from '../../dialog-add-member-to-chnl/dialog-add-member-to-chnl.component';
-import {MatMenu, MatMenuModule, MatMenuTrigger} from '@angular/material/menu';
+import { MatMenu, MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { DialogChannelInfoComponent } from '../../dialog-channel-info/dialog-channel-info.component';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
+import { ActivatedRoute,Router } from '@angular/router';
 
 @Component({
   selector: 'app-chat',
@@ -24,7 +25,7 @@ import { PickerComponent } from '@ctrl/ngx-emoji-mart';
   styleUrl: './chat.component.scss'
 })
 export class ChatComponent {
-  isPickerVisible = false; 
+  isPickerVisible = false;
   messages = [
     {
       avatar: '4',
@@ -55,38 +56,41 @@ export class ChatComponent {
       }
     }
   ];
-  constructor(public dialog: MatDialog){
+  constructor(public dialog: MatDialog, private router: Router,private route: ActivatedRoute) {
 
   }
   addEmoji(event: any) {
     console.log(event.emoji);
   }
-  
+
 
   togglePicker() {
-    this.isPickerVisible = !this.isPickerVisible; 
+    this.isPickerVisible = !this.isPickerVisible;
   }
   objectKeys(obj: object) {
     return Object.keys(obj);
   }
 
   objectValues(obj: object) {
-    return Object.values(obj); 
+    return Object.values(obj);
   }
 
   objectKeysLength(obj: object | string) {
     return Object.keys(obj).length;
   }
 
-  openDialogAddMembers(){
-    this.dialog.open(DialogAddMemberToChnlComponent,{
-      panelClass:'custom-dialog-br',
+  openDialogAddMembers() {
+    this.dialog.open(DialogAddMemberToChnlComponent, {
+      panelClass: 'custom-dialog-br',
     })
   }
 
-  openDialogChannelInfo(){
-    this.dialog.open(DialogChannelInfoComponent,{
-      panelClass:'custom-dialog-br',
+  openDialogChannelInfo() {
+    this.dialog.open(DialogChannelInfoComponent, {
+      panelClass: 'custom-dialog-br',
     })
+  }
+  navigateToThread() {
+    this.router.navigate(['/main', {outlets: {'threadOutlet': ['thread']}}]);
   }
 }

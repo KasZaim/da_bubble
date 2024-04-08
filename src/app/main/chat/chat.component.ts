@@ -8,6 +8,7 @@ import { DialogAddMemberToChnlComponent } from '../../dialog-add-member-to-chnl/
 import {MatMenu, MatMenuModule, MatMenuTrigger} from '@angular/material/menu';
 import { DialogChannelInfoComponent } from '../../dialog-channel-info/dialog-channel-info.component';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
+import { DialogEditMessageComponent } from '../../dialog-edit-message/dialog-edit-message.component';
 
 @Component({
   selector: 'app-chat',
@@ -27,6 +28,7 @@ export class ChatComponent {
   isPickerVisible = false; 
   messages = [
     {
+      id: 1,
       avatar: '4',
       name: 'Noah Braun',
       time: '14:25 Uhr',
@@ -36,6 +38,7 @@ export class ChatComponent {
       }
     },
     {
+      id: 2,
       avatar: '5',
       name: 'Sofia Müller',
       time: '14:30 Uhr',
@@ -45,6 +48,7 @@ export class ChatComponent {
       }
     },
     {
+      id: 3,
       avatar: '6',
       name: 'Frederik Beck',
       time: '15:06 Uhr',
@@ -81,6 +85,15 @@ export class ChatComponent {
   openDialogAddMembers(){
     this.dialog.open(DialogAddMemberToChnlComponent,{
       panelClass:'custom-dialog-br',
+    })
+  }
+
+  openDialogEditMessage(id: number){
+    const message = this.messages.find((message) => message.id === id)
+    if (message === undefined) throw new Error(`Couldn't find message with id ${id}`);
+    this.dialog.open(DialogEditMessageComponent,{
+      panelClass:'custom-dialog-br',
+      data: {message : message.message}
     })
   }
 

@@ -32,7 +32,7 @@
                         <img src="../../../assets/img/icons/3-dots.svg" alt="More">
                     </button>
                     <mat-menu class="moreMenu" #menu="matMenu">
-                        <button mat-menu-item>
+                        <button mat-menu-item (click)="openDialogEditMessage(message.id)">
                             Nachricht bearbeiten
                         </button>
                     </mat-menu>

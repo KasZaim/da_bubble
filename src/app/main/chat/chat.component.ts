@@ -6,10 +6,13 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { DialogAddMemberToChnlComponent } from '../../dialog-add-member-to-chnl/dialog-add-member-to-chnl.component';
 import { MatMenu, MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
+import { MatMenu, MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { DialogChannelInfoComponent } from '../../dialog-channel-info/dialog-channel-info.component';
 import { DialogShowChannelMemberComponent } from '../../dialog-show-channel-member/dialog-show-channel-member.component';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { DialogEditMessageComponent } from '../../dialog-edit-message/dialog-edit-message.component';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ChatService } from './chat.service';
 import { ActivatedRoute,Router } from '@angular/router';
 import { MainComponent } from '../main.component';
 
@@ -36,40 +39,11 @@ export class ChatComponent {
     this.threadOpen.emit(true);
   }
   
-  messages = [
-    {
-      id: 1,
-      avatar: '4',
-      name: 'Noah Braun',
-      time: '14:25 Uhr',
-      message: 'Welche Version ist aktuell von Angular?',
-      reactions: {
-
-      }
-    },
-    {
-      id: 2,
-      avatar: '5',
-      name: 'Sofia Müller',
-      time: '14:30 Uhr',
-      message: 'Ich habe die gleiche Frage. Ich habe gegoogelt und es scheint, dass die aktuelle Version Angular 13 ist. Vielleicht weiß Frederik, ob es wahr ist.',
-      reactions: {
-        'nerd': 1
-      }
-    },
-    {
-      id: 3,
-      avatar: '6',
-      name: 'Frederik Beck',
-      time: '15:06 Uhr',
-      message: 'Ja das ist es.',
-      reactions: {
-        'hands-up': 1,
-        'nerd': 3,
-      }
-    }
-  ];
-  constructor(public dialog: MatDialog, private router: Router,private route: ActivatedRoute) {
+  constructor(
+    public dialog: MatDialog,
+    private router: Router,
+    private route: ActivatedRoute,
+    public chatService: ChatService){
 
   }
   addEmoji(event: any) {
@@ -77,7 +51,9 @@ export class ChatComponent {
   }
 
 
+
   togglePicker() {
+    this.isPickerVisible = !this.isPickerVisible;
     this.isPickerVisible = !this.isPickerVisible;
   }
   objectKeys(obj: object) {
@@ -85,6 +61,7 @@ export class ChatComponent {
   }
 
   objectValues(obj: object) {
+    return Object.values(obj);
     return Object.values(obj);
   }
 
@@ -98,14 +75,15 @@ export class ChatComponent {
     })
   }
 
-  openDialogEditMessage(id: number){
-    const message = this.messages.find((message) => message.id === id)
-    if (message === undefined) throw new Error(`Couldn't find message with id ${id}`);
-    this.dialog.open(DialogEditMessageComponent,{
-      panelClass:'custom-dialog-br',
-      data: {message : message.message}
-    })
+  openDialogEditMessage(id: string) {
+    // const message = this.chatService.messages.find((message) => message.id === id);
+    // if (message === undefined) throw new Error(`Couldn't find message with id ${id}`);
+    // this.dialog.open(DialogEditMessageComponent, {
+    //   panelClass: 'custom-dialog-br',
+    //   data: { message: message.message }
+    // });
   }
+
 
 
   openDialogChannelInfo() {
@@ -114,11 +92,12 @@ export class ChatComponent {
     })
   }
 
-  openDialogShowMembers(){
-    this.dialog.open(DialogShowChannelMemberComponent,{
-      panelClass:'custom-dialog-br',
-    })
+  openDialogShowMembers() {
+    this.dialog.open(DialogShowChannelMemberComponent, {
+      panelClass: 'custom-dialog-br',
+    });
   }
+
   openDialog(event: MouseEvent): void {
     let element = event.target as Element | null;
 
@@ -137,4 +116,6 @@ export class ChatComponent {
       });
     }
   }
+
+
 }

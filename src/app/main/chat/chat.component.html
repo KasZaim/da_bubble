@@ -27,8 +27,8 @@
                     <button mat-icon-button>
                         <img src="../../../assets/img/icons/emoji-hands-up.svg" alt="React">
                     </button>
-                    <button mat-icon-button>
-                        <img src="../../../assets/img/icons/comment.svg" alt="Comment">
+                    <button (click)="navigateToThread()" mat-icon-button>
+                        <img  src="../../../assets/img/icons/comment.svg" alt="Comment">
                     </button>
                     <button mat-icon-button [matMenuTriggerFor]="menu">
                         <img src="../../../assets/img/icons/3-dots.svg" alt="More">
@@ -46,7 +46,7 @@
                         <h5>{{ message.name }}</h5>
                         <span>{{ message.time }}</span>
                     </div>
-                    <div class="message-text" (click)="navigateToThread()">{{ message.message }}</div>
+                    <div class="message-text">{{ message.message }}</div>
                     <div>
                         <div class="reaction">
                             @if(objectKeysLength(message.reactions) > 0) {

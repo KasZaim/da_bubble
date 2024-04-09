@@ -17,7 +17,6 @@ export class FirestoreService {
   usersRef = collection(this.firestore, 'users');
   channelsRef = collection(this.firestore, 'channels');
 
-
   constructor(private router: Router) {
     this.currentUser$ = new Observable((observer) => {
       onAuthStateChanged(this.auth, (user) => {
@@ -93,4 +92,5 @@ export class FirestoreService {
         const errorMessage = error.message;
       });
   };
+
 }

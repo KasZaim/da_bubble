@@ -1,6 +1,6 @@
 import { Dialog } from '@angular/cdk/dialog';
 import { CommonModule } from '@angular/common';
-import { Component, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild, input } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
@@ -11,6 +11,7 @@ import { DialogShowChannelMemberComponent } from '../../dialog-show-channel-memb
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { DialogEditMessageComponent } from '../../dialog-edit-message/dialog-edit-message.component';
 import { ActivatedRoute,Router } from '@angular/router';
+import { MainComponent } from '../main.component';
 
 @Component({
   selector: 'app-chat',
@@ -21,13 +22,20 @@ import { ActivatedRoute,Router } from '@angular/router';
     CommonModule,
     MatDialogModule,
     MatMenuModule,
-    PickerComponent
+    PickerComponent,
+    MainComponent
   ],
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.scss'
 })
 export class ChatComponent {
+  @Output()threadOpen = new EventEmitter<boolean>();
   isPickerVisible = false;
+
+  navigateToThread() {
+    this.threadOpen.emit(true);
+  }
+  
   messages = [
     {
       id: 1,
@@ -104,9 +112,6 @@ export class ChatComponent {
     this.dialog.open(DialogChannelInfoComponent, {
       panelClass: 'custom-dialog-br',
     })
-  }
-  navigateToThread() {
-    this.router.navigate(['/main', {outlets: {'threadOutlet': ['thread']}}]);
   }
 
   openDialogShowMembers(){

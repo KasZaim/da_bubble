@@ -13,6 +13,7 @@ import { DialogEditMessageComponent } from '../../dialog-edit-message/dialog-edi
 import { ActivatedRoute, Router } from '@angular/router';
 import { ChatService } from './chat.service';
 
+
 @Component({
   selector: 'app-chat',
   standalone: true,
@@ -108,5 +109,27 @@ export class ChatComponent {
     }
   }
 
-
+  showTooltip(key: string, value: number) {
+    const tooltip = document.getElementById('customTooltip');
+    if (tooltip) {
+      // Dynamisches Erstellen des HTML-Inhalts mit den übergebenen Parametern
+      const content = `<div> 
+                          <img src="../../../assets/img/icons/emoji-${key}.svg">
+                          <span>${value}</span> 
+                       </div>`;
+  
+      tooltip.innerHTML = content;
+      tooltip.style.display = 'block';
+      tooltip.style.left = `${+20}px`;
+    tooltip.style.top = `- 300px`
+    }
+  }
+  
+  
+  hideTooltip() {
+    const tooltip = document.getElementById('customTooltip');
+    if (tooltip) {
+      tooltip.style.display = 'none'; // Tooltip verstecken
+    }
+  }
 }

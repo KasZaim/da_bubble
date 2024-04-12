@@ -21,7 +21,7 @@
             <!-- TODO: Add answers to thread amount -->
             <div class="message" *ngFor="let message of chatService.currentChannel.messages | keyvalue">
                 <div class="hoverMenu">
-                    <button mat-icon-button >
+                    <button mat-icon-button>
                         <img src="../../../assets/img/icons/emoji-check.svg" alt="React">
                     </button>
                     <button mat-icon-button>
@@ -52,10 +52,17 @@
                         <div class="reaction">
                             @if(message.value.reactions) {
                             @for(reaction of message.value.reactions | keyvalue; track reaction; let i = $index) {
-                            <button mat-raised-button>
-                                <img src="../../../assets/img/icons/emoji-{{ reaction.key }}.svg">
-                                <span>{{ reaction.value }}</span>
-                            </button>
+                            <div class="reaction-wrapper">
+                                <div class="reaction-tooltip">
+                                    <img src="../../../assets/img/icons/emoji-{{ reaction.key }}.svg">
+                                    <span>Name, Name</span>
+                                    <p>hat reagiert</p>
+                                </div>
+                                <button mat-raised-button>
+                                    <img src="../../../assets/img/icons/emoji-{{ reaction.key }}.svg">
+                                    <span>{{ reaction.value }}</span>
+                                </button>
+                            </div>
                             }
                             }
                             <img src="../../../assets/img/icons/add_reaction.svg" alt="Add reaction">

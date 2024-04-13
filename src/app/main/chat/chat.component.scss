@@ -46,6 +46,11 @@
         }
     }
 
+    .chat{
+        overflow-y: scroll;
+        padding: 1.5rem 1rem 0.75rem 0;
+    }
+
     .chat-content {
         padding: 1rem;
         display: flex;
@@ -305,16 +310,4 @@
     z-index: 5;
     left: 6rem;
     bottom: 1rem;
-}
-
-.reaction-wrapper {
-    position: relative;
-
-    >div {
-
-    }
-
-    >button {
-        
-    }
 }

@@ -11,7 +11,6 @@ import { DialogShowChannelMemberComponent } from '../../dialog-show-channel-memb
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { DialogEditMessageComponent } from '../../dialog-edit-message/dialog-edit-message.component';
 import { ChatService } from './chat.service';
-import { ActivatedRoute,Router } from '@angular/router';
 import { MainComponent } from '../main.component';
 
 

@@ -10,9 +10,9 @@ import { DialogChannelInfoComponent } from '../../dialog-channel-info/dialog-cha
 import { DialogShowChannelMemberComponent } from '../../dialog-show-channel-member/dialog-show-channel-member.component';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { DialogEditMessageComponent } from '../../dialog-edit-message/dialog-edit-message.component';
-import { ActivatedRoute, Router } from '@angular/router';
 import { ChatService } from './chat.service';
 import { MainComponent } from '../main.component';
+
 
 @Component({
   selector: 'app-chat',
@@ -70,7 +70,7 @@ export class ChatComponent {
   openDialogAddMembers() {
     this.dialog.open(DialogAddMemberToChnlComponent, {
       panelClass: 'custom-dialog-br',
-    })
+    });
   }
 
   openDialogEditMessage(id: string) {
@@ -87,7 +87,7 @@ export class ChatComponent {
   openDialogChannelInfo() {
     this.dialog.open(DialogChannelInfoComponent, {
       panelClass: 'custom-dialog-br',
-    })
+    });
   }
 
   openDialogShowMembers() {
@@ -115,5 +115,27 @@ export class ChatComponent {
     }
   }
 
-
+  showTooltip(key: string, value: number) {
+    const tooltip = document.getElementById('customTooltip');
+    if (tooltip) {
+      // Dynamisches Erstellen des HTML-Inhalts mit den übergebenen Parametern
+      const content = `<div> 
+                          <img src="../../../assets/img/icons/emoji-${key}.svg">
+                          <span>${value}</span> 
+                       </div>`;
+  
+      tooltip.innerHTML = content;
+      tooltip.style.display = 'block';
+      tooltip.style.left = `${+20}px`;
+    tooltip.style.top = `- 300px`
+    }
+  }
+  
+  
+  hideTooltip() {
+    const tooltip = document.getElementById('customTooltip');
+    if (tooltip) {
+      tooltip.style.display = 'none'; // Tooltip verstecken
+    }
+  }
 }

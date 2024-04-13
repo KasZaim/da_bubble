@@ -1,9 +1,11 @@
 import { Injectable, inject } from '@angular/core';
 import { list } from '@angular/fire/database';
-import { CollectionReference, DocumentData, Firestore, collection, collectionData, onSnapshot } from '@angular/fire/firestore';
+import { CollectionReference, DocumentData, Firestore, collection, collectionData, doc, onSnapshot, setDoc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
 import { Router } from '@angular/router';
+import { signOut } from '@angular/fire/auth';
+import { User } from './interfaces/user';
 
 @Injectable({
   providedIn: 'root'
@@ -27,6 +29,10 @@ export class FirestoreService {
           observer.next(user.uid);
         } else {
           observer.next(null);
+          // No User logged in
+          if (this.router.url === '/') {
+            this.router.navigate(['/login'])
+          }
         }
       });
     });
@@ -66,34 +72,52 @@ export class FirestoreService {
       });
   };
 
-  signUpWithEmailAndPassword = (email: string, password: string) => {
-    createUserWithEmailAndPassword(this.auth, email, password)
-      .then((userCredential) => {
-        // Signed up 
-        const user = userCredential.user;
-        // ...
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // ..
-      });
-  };
+  signUpWithEmailAndPassword(email: string, password: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      createUserWithEmailAndPassword(this.auth, email, password)
+        .then((userCredential) => {
+          // Signed up 
+          const user = userCredential.user;
+          resolve(user.uid); // Rückgabe der Nutzer-UID
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          reject(error); // Rückgabe des Fehlers
+        });
+    });
+  }
+  
 
-  loginWithEmailAndPassword = (email: string, password: string) => {
-    signInWithEmailAndPassword(this.auth, email, password)
+  loginWithEmailAndPassword = (email: string, password: string): Promise<string | null> => {
+    return signInWithEmailAndPassword(this.auth, email, password)
       .then((userCredential) => {
         // Signed in 
         const user = userCredential.user;
         console.log('Anmeldung erfolgreich', user.uid);
         this.router.navigate(['/']);
+        return null;
         // ...
       })
       .catch((error) => {
-        console.log('Anmeldung fehlgeschlagen');
-        const errorCode = error.code;
-        const errorMessage = error.message;
+        return error.code;
       });
   };
 
+  logout() {
+    signOut(this.auth).then(() => {
+      // Erfolgreich ausgeloggt
+      console.log("User erfolgreich ausgeloggt");
+    }).catch((error) => {
+      // Fehler beim Ausloggen
+      console.error("Fehler beim Ausloggen: ", error);
+    });
+  }
+
+  async saveUser(item: User, uid: string) {
+    await setDoc(doc(this.getFirestore(), 'users', uid), {
+      avatar: item.avatar,
+      name: item.name
+    });
+  }
 }

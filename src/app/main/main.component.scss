@@ -8,12 +8,12 @@ main {
     display: flex;
     justify-content: flex-start;
     gap: 1.25rem;
-    padding: 0 1.25rem 1.5625rem 1.25rem;
+    padding: 0 1.25rem 0 1.25rem;
     height: 100%;
 
-    app-chat {
-         min-width: 50%;
-         width: 100%;
+    app-chat, app-thread {
+        width: 45rem;
+        height: 86vh;
     }
 }
 
@@ -21,6 +21,7 @@ main {
     width: fit-content;
     overflow: unset;
     border-radius: 1.875rem;
+    height: 86vh;
 }
 
 .menu-sidenav {
@@ -89,5 +90,5 @@ main {
     display: flex;
     justify-content: flex-start;
     gap: 1.5rem;
-    padding-left: 3rem;
+    padding-left: 4rem;
 }

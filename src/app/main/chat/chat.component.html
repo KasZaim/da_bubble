@@ -39,7 +39,7 @@
                         </button>
                     </mat-menu>
                 </div>
-                
+
 
                 <!-- TODO: only allowed to edit my own messages -->
                 <img src="../../../assets/img/avatar/{{ message.value.avatar }}.svg">
@@ -73,31 +73,32 @@
                     </div>
                 </div>
             </div>
-            <div class="chat-input">
-                <textarea type="text" placeholder="Nachricht an #Entwicklerteam"></textarea>
-                <div class="action-buttons">
-                    <div class="button-wrapper">
-                        <button mat-icon-button>
-                            <img src="../../../assets/img/icons/add-gray.svg" alt="Add image">
-                        </button>
-                        <div class="vector"></div>
-                        <button mat-icon-button (click)="togglePicker()">
-                            <img src="../../../assets/img/icons/sentiment_satisfied.svg" alt="Add emoji">
-                        </button>
 
-                        <div class="emoji-picker" *ngIf="isPickerVisible">
-                            <emoji-mart (emojiClick)="addEmoji($event)"></emoji-mart>
-                        </div>
-                        <button mat-icon-button>
-                            <img src="../../../assets/img/icons/alternate_email.svg" alt="Tag someone">
-                        </button>
+            <!-- TODO: add focus textarea on click -->
+        </div>
+        <div class="chat-input">
+            <textarea type="text" placeholder="Nachricht an #Entwicklerteam"></textarea>
+            <div class="action-buttons">
+                <div class="button-wrapper">
+                    <button mat-icon-button>
+                        <img src="../../../assets/img/icons/add-gray.svg" alt="Add image">
+                    </button>
+                    <div class="vector"></div>
+                    <button mat-icon-button (click)="togglePicker()">
+                        <img src="../../../assets/img/icons/sentiment_satisfied.svg" alt="Add emoji">
+                    </button>
+
+                    <div class="emoji-picker" *ngIf="isPickerVisible">
+                        <emoji-mart (emojiClick)="addEmoji($event)"></emoji-mart>
                     </div>
                     <button mat-icon-button>
-                        <img src="../../../assets/img/icons/send-button.svg" alt="Send message">
+                        <img src="../../../assets/img/icons/alternate_email.svg" alt="Tag someone">
                     </button>
                 </div>
+                <button mat-icon-button>
+                    <img src="../../../assets/img/icons/send-button.svg" alt="Send message">
+                </button>
             </div>
-            <!-- TODO: add focus textarea on click -->
         </div>
     </div>
 </section>

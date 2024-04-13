@@ -50,7 +50,6 @@ export class ChatComponent {
 
   togglePicker() {
     this.isPickerVisible = !this.isPickerVisible;
-    this.isPickerVisible = !this.isPickerVisible;
   }
   objectKeys(obj: object) {
     return Object.keys(obj);

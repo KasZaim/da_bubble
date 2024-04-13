@@ -1,11 +1,13 @@
 import { Component, Output } from '@angular/core';
 import { ConversationsComponent } from './conversations/conversations.component';
 import { HeaderComponent } from './header/header.component';
-import { ChatComponent } from './chat/chat.component';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { NgClass } from '@angular/common';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { ThreadComponent } from './thread/thread.component';
+import { ChatComponent } from './chat/chat.component';
+import { WelcomeScreenComponent } from '../welcome-screen/welcome-screen.component';
+import { DirectMessageComponent } from '../direct-message/direct-message.component';
 
 @Component({
   selector: 'app-main',
@@ -13,12 +15,14 @@ import { ThreadComponent } from './thread/thread.component';
   imports: [
     HeaderComponent,
     ConversationsComponent,
-    ChatComponent,
     MatSidenavModule,
     ThreadComponent,
     NgClass,
     RouterLink,
-    RouterOutlet
+    RouterOutlet,
+    ChatComponent,
+    WelcomeScreenComponent,
+    DirectMessageComponent
   ],
   templateUrl: './main.component.html',
   styleUrl: './main.component.scss'
@@ -26,8 +30,14 @@ import { ThreadComponent } from './thread/thread.component';
 export class MainComponent {
   threadOpen = false;
   showMenu = true;
+  OpenComponent : 'directMessage' | 'newChannel' | 'chat'  | string = '';
 
   toggleThread(toggle : boolean){
     this.threadOpen = toggle;
+  }
+
+  setComponent(componentName : string){
+    this.OpenComponent = componentName;
+    console.log(this.OpenComponent)
   }
 }

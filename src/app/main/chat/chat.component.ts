@@ -58,7 +58,6 @@ export class ChatComponent {
 
   objectValues(obj: object) {
     return Object.values(obj);
-    return Object.values(obj);
   }
 
   objectKeysLength(obj: object | string) {

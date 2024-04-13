@@ -39,8 +39,6 @@ export class ChatComponent {
   
   constructor(
     public dialog: MatDialog,
-    private router: Router,
-    private route: ActivatedRoute,
     public chatService: ChatService){
 
   }
@@ -59,7 +57,6 @@ export class ChatComponent {
   }
 
   objectValues(obj: object) {
-    return Object.values(obj);
     return Object.values(obj);
   }
 

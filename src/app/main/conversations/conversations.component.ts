@@ -31,6 +31,7 @@ import { ChatService } from '../chat/chat.service';
 })
 export class ConversationsComponent {
   @Output() openDM = new EventEmitter<string>();
+  @Output() user = new EventEmitter<object>();
   
   contacts = [
     {
@@ -76,7 +77,6 @@ export class ConversationsComponent {
   ) {
     this.subChannelsList();
     this.subUsersList();
-
   }
 
   subChannelsList() {
@@ -120,8 +120,9 @@ export class ConversationsComponent {
       panelClass: 'custom-dialog'
     });
   }
-  openComponent(componentName : string){
+  openComponent(componentName : string, user : object){
     this.openDM.emit(componentName)
+    this.user.emit(user)
   }
 }
 

@@ -1,4 +1,4 @@
-import { Component, Output } from '@angular/core';
+import { Component, Input, Output } from '@angular/core';
 import { ConversationsComponent } from './conversations/conversations.component';
 import { HeaderComponent } from './header/header.component';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -7,7 +7,7 @@ import { RouterLink, RouterOutlet } from '@angular/router';
 import { ThreadComponent } from './thread/thread.component';
 import { ChatComponent } from './chat/chat.component';
 import { WelcomeScreenComponent } from '../welcome-screen/welcome-screen.component';
-import { DirectMessageComponent } from '../direct-message/direct-message.component';
+import { DirectMessageComponent } from './conversations/direct-message/direct-message.component';
 
 @Component({
   selector: 'app-main',
@@ -31,6 +31,7 @@ export class MainComponent {
   threadOpen = false;
   showMenu = true;
   OpenComponent : 'directMessage' | 'newChannel' | 'chat'  | string = '';
+  selectedUser? : object;
 
   toggleThread(toggle : boolean){
     this.threadOpen = toggle;
@@ -38,6 +39,9 @@ export class MainComponent {
 
   setComponent(componentName : string){
     this.OpenComponent = componentName;
-    console.log(this.OpenComponent)
+  }
+  selectedUserForDM(user : object){
+    this.selectedUser = user;
+    console.log(this.selectedUser)
   }
 }

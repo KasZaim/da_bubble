@@ -1,3 +1,7 @@
+:host {
+    flex: 1;
+}
+
 .chat-body {
     background-color: #fff;
     border-radius: 2rem;
@@ -44,6 +48,10 @@
                 margin-right: 1.25rem;
             }
         }
+    }
+
+    .chat{
+        padding: 1.5rem 1rem 0.75rem 0;
     }
 
     .chat-content {

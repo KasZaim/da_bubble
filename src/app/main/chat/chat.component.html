@@ -77,7 +77,7 @@
             <!-- TODO: add focus textarea on click -->
         </div>
         <div class="chat-input">
-            <textarea type="text" placeholder="Nachricht an #Entwicklerteam"></textarea>
+            <textarea type="text" [(ngModel)]="messageText" placeholder="Nachricht an #Entwicklerteam"></textarea>
             <div class="action-buttons">
                 <div class="button-wrapper">
                     <button mat-icon-button>
@@ -95,7 +95,7 @@
                         <img src="../../../assets/img/icons/alternate_email.svg" alt="Tag someone">
                     </button>
                 </div>
-                <button mat-icon-button>
+                <button (click)="send()" mat-icon-button>
                     <img src="../../../assets/img/icons/send-button.svg" alt="Send message">
                 </button>
             </div>

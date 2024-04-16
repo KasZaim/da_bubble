@@ -12,6 +12,9 @@ import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { DialogEditMessageComponent } from '../../dialog-edit-message/dialog-edit-message.component';
 import { ChatService } from './chat.service';
 import { MainComponent } from '../main.component';
+import { Message } from '../../interfaces/message';
+import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 
 @Component({
@@ -24,13 +27,16 @@ import { MainComponent } from '../main.component';
     MatDialogModule,
     MatMenuModule,
     PickerComponent,
-    MainComponent
+    MainComponent,
+    FormsModule,
+    MatFormFieldModule
   ],
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.scss'
 })
 export class ChatComponent {
   @Output()threadOpen = new EventEmitter<boolean>();
+  messageText: string = '';
   isPickerVisible = false;
 
   navigateToThread() {
@@ -132,4 +138,20 @@ export class ChatComponent {
       tooltip.style.display = 'none'; // Tooltip verstecken
     }
   }
+  async send() {
+    console.log(this.messageText)
+    if (this.messageText.trim() !== '') {
+      const message: Message = {
+        avatar: '', // Hier könnten Sie Benutzerdaten hinzufügen
+        name: 'Benutzername',
+        time: new Date().toISOString(), // ISO String als eindeutigen Schlüssel
+        message: this.messageText,
+        reactions: new Map() // Leere Map für Reaktionen initialisieren
+      };
+
+      await this.chatService.sendMessage(this.chatService.currentChannelID, message);
+      this.messageText = ''; // Textfeld nach dem Senden leeren
+    }
+  }
+
 }

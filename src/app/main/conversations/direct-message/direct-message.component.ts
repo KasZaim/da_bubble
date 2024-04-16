@@ -3,14 +3,13 @@ import { ChatComponent } from '../../chat/chat.component';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { DialogChannelInfoComponent } from '../../../dialog-channel-info/dialog-channel-info.component';
-import { DialogAddMemberToChnlComponent } from '../../../dialog-add-member-to-chnl/dialog-add-member-to-chnl.component';
-import { DialogShowChannelMemberComponent } from '../../../dialog-show-channel-member/dialog-show-channel-member.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { ConversationsComponent } from '../conversations.component';
 import { UsersList } from '../../../interfaces/users-list';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { PofileInfoCardComponent } from '../../../pofile-info-card/pofile-info-card.component';
 @Component({
   selector: 'app-direct-message',
   standalone: true,
@@ -20,7 +19,8 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
     CommonModule,
     MatDialogModule,
     ConversationsComponent,
-    MatButtonToggleModule],
+    MatButtonToggleModule,
+  ],
   templateUrl: './direct-message.component.html',
   styleUrl: './direct-message.component.scss'
 })
@@ -46,27 +46,9 @@ export class DirectMessageComponent {
     });
   }
 
-  openDialogAddMembers() {
-    this.dialog.open(DialogAddMemberToChnlComponent, {
-      panelClass: 'custom-dialog-br',
-    });
-  }
-  openDialog(event: MouseEvent): void {
-    let element = event.target as Element | null;
-
-    if (element) {
-      let htmlElement = element as HTMLElement;
-      let boundingClientRect = htmlElement.getBoundingClientRect();
-
-      let dialogPosition = {
-        top: `${boundingClientRect.bottom + window.scrollY + 15}px`,
-        left: `${boundingClientRect.left + window.scrollX - 280}px`,
-      };
-
-      this.dialog.open(DialogShowChannelMemberComponent, { // Ersetzen Sie DialogSomeComponent durch Ihre tatsächliche Dialogkomponente
-        width: '350px',
-        position: dialogPosition,
-      });
-    }
+  openProfileCard(){
+    this.dialog.open(PofileInfoCardComponent,{
+      data: this.sendedUser
+    })
   }
 }

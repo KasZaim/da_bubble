@@ -44,7 +44,7 @@
             </mat-panel-title>
         </mat-expansion-panel-header>
         <mat-button-toggle-group class="contact-list" vertical="true" hideSingleSelectionIndicator="true">
-            <mat-button-toggle class="contact" (click)="openComponent('directMessage')" *ngFor="let user of usersList">
+            <mat-button-toggle class="contact" (click)="openDirectMessage(user)" (click)="openComponent('directMessage')" *ngFor="let user of usersList">
                 <div>
                     <img src="../../../assets/img/avatar/{{ user.avatar }}.svg">
                     @if(user.online) {

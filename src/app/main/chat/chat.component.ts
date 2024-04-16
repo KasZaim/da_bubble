@@ -45,11 +45,8 @@ export class ChatComponent {
   addEmoji(event: any) {
     console.log(event.emoji);
   }
-
-
-
+  
   togglePicker() {
-    this.isPickerVisible = !this.isPickerVisible;
     this.isPickerVisible = !this.isPickerVisible;
   }
   objectKeys(obj: object) {

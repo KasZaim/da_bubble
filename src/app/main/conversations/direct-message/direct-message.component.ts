@@ -9,7 +9,9 @@ import { CommonModule } from '@angular/common';
 import { ConversationsComponent } from '../conversations.component';
 import { UsersList } from '../../../interfaces/users-list';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+
 import { PofileInfoCardComponent } from '../../../pofile-info-card/pofile-info-card.component';
+
 @Component({
   selector: 'app-direct-message',
   standalone: true,
@@ -21,6 +23,7 @@ import { PofileInfoCardComponent } from '../../../pofile-info-card/pofile-info-c
     ConversationsComponent,
     MatButtonToggleModule,
   ],
+
   templateUrl: './direct-message.component.html',
   styleUrl: './direct-message.component.scss'
 })
@@ -50,5 +53,29 @@ export class DirectMessageComponent {
     this.dialog.open(PofileInfoCardComponent,{
       data: this.sendedUser
     })
+
+  openDialogAddMembers() {
+    this.dialog.open(DialogAddMemberToChnlComponent, {
+      panelClass: 'custom-dialog-br',
+    });
+  }
+  openDialog(event: MouseEvent): void {
+    let element = event.target as Element | null;
+
+    if (element) {
+      let htmlElement = element as HTMLElement;
+      let boundingClientRect = htmlElement.getBoundingClientRect();
+
+      let dialogPosition = {
+        top: `${boundingClientRect.bottom + window.scrollY + 15}px`,
+        left: `${boundingClientRect.left + window.scrollX - 280}px`,
+      };
+
+      this.dialog.open(DialogShowChannelMemberComponent, { // Ersetzen Sie DialogSomeComponent durch Ihre tatsächliche Dialogkomponente
+        width: '350px',
+        position: dialogPosition,
+      });
+    }
+
   }
 }

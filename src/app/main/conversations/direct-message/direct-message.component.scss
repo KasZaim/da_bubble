@@ -23,6 +23,7 @@
             justify-content: space-between;
             align-items: center;
             gap: 0.94rem;
+            height: 3.5rem;
         }
 
         button {
@@ -35,10 +36,18 @@
             }
         }
 
-        img {
+        >img:first-child {
             width: 4.375rem;
             height: 4.375rem;
             border-radius: 50%;
+        }
+
+        >img:last-child {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            width: 0.875rem;
+            height: 0.875rem;
         }
     }
 
@@ -60,7 +69,8 @@
                 border-radius: 50%;
             }
         }
-        button{
+
+        button {
             background-color: white;
             border: none;
             color: #535AF1;
@@ -69,7 +79,7 @@
             font-weight: 400;
             font-size: 1.25rem;
 
-            &:hover{
+            &:hover {
                 font-weight: 700;
             }
         }
@@ -408,6 +418,7 @@
     line-height: normal;
     transition: 80ms ease-in;
     padding: 0.5rem;
+
     &:hover {
         background-color: var(--bg-color);
     }

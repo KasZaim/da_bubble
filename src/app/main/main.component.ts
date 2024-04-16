@@ -8,6 +8,7 @@ import { ThreadComponent } from './thread/thread.component';
 import { ChatComponent } from './chat/chat.component';
 import { WelcomeScreenComponent } from '../welcome-screen/welcome-screen.component';
 import { DirectMessageComponent } from './conversations/direct-message/direct-message.component';
+import { UsersList } from '../../app/interfaces/users-list';
 
 @Component({
   selector: 'app-main',
@@ -31,7 +32,13 @@ export class MainComponent {
   threadOpen = false;
   showMenu = true;
   OpenComponent : 'directMessage' | 'newChannel' | 'chat'  | string = '';
-  selectedUser? : object;
+  selectedUser: UsersList = {
+    id: '',
+    name: '',
+    avatar: '',
+    online: false
+  };
+  
 
   toggleThread(toggle : boolean){
     this.threadOpen = toggle;
@@ -40,7 +47,7 @@ export class MainComponent {
   setComponent(componentName : string){
     this.OpenComponent = componentName;
   }
-  selectedUserForDM(user : object){
+  selectedUserForDM(user : UsersList){
     this.selectedUser = user;
     console.log(this.selectedUser)
   }

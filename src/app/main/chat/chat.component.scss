@@ -50,9 +50,6 @@
         }
     }
 
-    .chat{
-        padding: 1.5rem 1rem 0.75rem 0;
-    }
 
     .chat-content {
         padding: 1rem;
@@ -188,7 +185,7 @@
 }
 .chat{
     overflow-y: scroll;
-    padding-top: 1.5rem;
+    padding: 1.5rem 1rem 0.75rem 0;
 }
 
 .chat-input {

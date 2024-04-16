@@ -23,7 +23,7 @@
             </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <mat-button-toggle-group vertical="true" (click)="openComponent('chat', channelsList)" hideSingleSelectionIndicator="true" class="channel-list">
+        <mat-button-toggle-group vertical="true" (click)="openComponent('chat')" hideSingleSelectionIndicator="true" class="channel-list">
             <mat-button-toggle (click)="chatService.openChannel(channel.id)" class="channel" value="{{ channel.id }}" *ngFor="let channel of channelsList">
                 <img src="../../../assets/img/icons/tag.svg">
                 <h3>{{ channel.id }}</h3>
@@ -44,7 +44,7 @@
             </mat-panel-title>
         </mat-expansion-panel-header>
         <mat-button-toggle-group class="contact-list" vertical="true" hideSingleSelectionIndicator="true">
-            <mat-button-toggle class="contact" (click)="openComponent('directMessage', user)" *ngFor="let user of usersList">
+            <mat-button-toggle class="contact" (click)="openDirectMessage(user)" (click)="openComponent('directMessage')" *ngFor="let user of usersList">
                 <div>
                     <img src="../../../assets/img/avatar/{{ user.avatar }}.svg">
                     @if(user.online) {

@@ -9,7 +9,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { ConversationsComponent } from '../conversations.component';
-
+import { UsersList } from '../../../interfaces/users-list';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 @Component({
   selector: 'app-direct-message',
   standalone: true,
@@ -18,13 +19,15 @@ import { ConversationsComponent } from '../conversations.component';
     MatIconModule,
     CommonModule,
     MatDialogModule,
-    ConversationsComponent],
+    ConversationsComponent,
+    MatButtonToggleModule],
   templateUrl: './direct-message.component.html',
   styleUrl: './direct-message.component.scss'
 })
 export class DirectMessageComponent {
   isPickerVisible = false;
-  @Input() sendedUser?: object;
+  @Input() sendedUser!: UsersList;
+  
   constructor(public dialog: MatDialog,) {
   }
   ngOnInit() {

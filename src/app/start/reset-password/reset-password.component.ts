@@ -1,48 +1,59 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { StartComponent } from '../start.component';
-import {MatButtonModule} from '@angular/material/button';
-import { Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FirestoreService } from '../../firestore.service'; 
-import { FormsModule } from '@angular/forms';
+import { StartComponent } from '../start.component';
+import { MatButtonModule } from '@angular/material/button';
+import { ReactiveFormsModule, FormGroup, FormControl, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 
 @Component({
   selector: 'app-reset-password',
   standalone: true,
-  imports: [ StartComponent, MatButtonModule, FormsModule ],
+  imports: [StartComponent, MatButtonModule, ReactiveFormsModule, CommonModule],
   templateUrl: './reset-password.component.html',
-  styleUrl: './reset-password.component.scss'
+  styleUrls: ['./reset-password.component.scss']
 })
 export class ResetPasswordComponent {
-  newPassword: string = '';
-  confirmNewPassword: string = '';
-  oobCode: string; // Der Code aus der URL
+  resetPasswordForm: FormGroup;
+  oobCode: string;
 
   constructor(
     private route: ActivatedRoute,
     private firestoreService: FirestoreService,
     private router: Router
   ) {
-    // Extrahiere den oobCode aus der URL
     this.oobCode = this.route.snapshot.queryParams['oobCode'];
+    this.resetPasswordForm = new FormGroup({
+      newPassword: new FormControl('', [Validators.required, Validators.minLength(6)]),
+      confirmNewPassword: new FormControl('', [Validators.required])
+    }, { validators: this.passwordMatchValidator });
   }
 
   changePassword() {
-    if (this.newPassword !== this.confirmNewPassword) {
-      alert("Die Passwörter stimmen nicht überein.");
+    if (this.resetPasswordForm.invalid) {
+      alert("Bitte überprüfen Sie Ihre Eingaben.");
       return;
     }
-    this.firestoreService.confirmPasswordReset(this.oobCode, this.newPassword)
+    const newPasswordControl = this.resetPasswordForm.get('newPassword');
+    const newPassword = newPasswordControl ? newPasswordControl.value : null;
+
+    this.firestoreService.confirmPasswordReset(this.oobCode, newPassword)
       .then(() => {
-        alert("Passwort erfolgreich geändert. Bitte melden Sie sich mit Ihrem neuen Passwort an.");
-        this.router.navigate(['/login']); // Navigiere zur Login-Seite
+        alert("Passwort erfolgreich geändert.");
+        this.router.navigate(['/login']);
       })
       .catch(error => {
         alert("Fehler beim Ändern des Passworts: " + error.message);
       });
   }
 
+  private passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
+    const newPassword = control.get('newPassword');
+    const confirmNewPassword = control.get('confirmNewPassword');
+    return newPassword && confirmNewPassword && newPassword.value !== confirmNewPassword.value ? { mismatch: true } : null;
+  }
+
   goBack() {
-    this.router.navigate(['/login']); // oder eine spezifische Route
+    this.router.navigate(['/login']);
   }
 }

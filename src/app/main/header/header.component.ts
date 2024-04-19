@@ -29,6 +29,7 @@ export class HeaderComponent {
     id: '',
     name: '',
     avatar: '',
+    email: '',
     online: false
   };
 
@@ -81,6 +82,7 @@ export class HeaderComponent {
       id: id || '',
       name: obj.name || '',
       avatar: obj.avatar || '',
+      email: obj.email || '',
       online: obj.online || false
     }
   }

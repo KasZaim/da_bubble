@@ -2,36 +2,49 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { User } from './interfaces/user';
 import { getAuth, onAuthStateChanged } from '@angular/fire/auth';
-import { CurrentUser } from './interfaces/current-user';
 import { Firestore, doc, onSnapshot } from '@angular/fire/firestore';
+import { FirestoreService } from './firestore.service';
+import { UsersList } from './interfaces/users-list';
+
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
-  private currentUserSubject = new BehaviorSubject<CurrentUser | null>(null);
-  public currentUser$: Observable<CurrentUser | null> = this.currentUserSubject.asObservable();
 
-  constructor(private firestore: Firestore) {
-    const auth = getAuth();
-    onAuthStateChanged(auth, (firebaseUser) => {
-      if (firebaseUser) {
-        // Holen Sie Benutzerdaten aus Firestore, wenn der Authentifizierungsstatus sich ändert
-        const userDocRef = doc(this.firestore, 'users', firebaseUser.uid);
-        onSnapshot(userDocRef, (docSnapshot) => {
-          if (docSnapshot.exists()) {
-            const userData: CurrentUser = docSnapshot.data() as CurrentUser;
-            this.currentUserSubject.next(userData);
-          } else {
-            this.currentUserSubject.next(null);
-          }
-        });
-      } else {
-        this.currentUserSubject.next(null);
-      }
+export class CurrentuserService {
+  currentUserUid: string | null = '';
+  currentUser: UsersList = {
+    id: '',
+    name: '',
+    avatar: '',
+    online: false
+  }
+  constructor(private firestore : FirestoreService){
+    this.firestore.currentUser$.subscribe(uid => {
+      this.currentUserUid = uid;
+      this.subCurrentUser();
+      // Führen Sie hier Aktionen aus, die vom aktuellen Benutzerstatus abhängen
     });
   }
-
-  getCurrentUser(): CurrentUser | null {
-    return this.currentUserSubject.value;
+  subCurrentUser() {
+    let firestore = this.firestore.getFirestore();
+    let ref;
+    if (this.currentUserUid) {
+      ref = doc(firestore, 'users', this.currentUserUid);
+      return onSnapshot(ref, (doc) => {
+        this.currentUser = this.setCurrentUserObj(doc.data(), doc.id);
+      });
+    } else {
+      return console.log('invalid user uid');
+    }
   }
+
+  setCurrentUserObj(obj: any, id: string): UsersList {
+    return {
+      id: id || '',
+      name: obj.name || '',
+      avatar: obj.avatar || '',
+      online: obj.online || false
+    }
+  }
+
 }

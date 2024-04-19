@@ -49,7 +49,6 @@ export class LoginComponent {
         // Navigation oder weitere Aktionen
       }
     });
-    console.log(this.firestore.currentUser$)
   }
 
 

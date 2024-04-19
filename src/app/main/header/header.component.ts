@@ -29,6 +29,7 @@ export class HeaderComponent {
     id: '',
     name: '',
     avatar: '',
+    email: '',
     online: false
   };
 

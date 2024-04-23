@@ -118,25 +118,6 @@ export class ChatService {
     });
   }
 
-
-
-  // async sendMessage(channelId: string, message: Message) { //fügt eine message in dokument feld Map(messages) hinzu
-  //   const channelRef = doc(this.firestore.firestore, `channels/${channelId}`);
-  //   const messageKey = `messages.${uuidv4()}`; 
-
-  //   const messageData : Message = {
-  //     avatar: '2',// avatar: message.avatar,
-  //     name: message.name,
-  //     time: message.time,
-  //     message: message.message,
-  //     reactions: {}
-  //   };
-
-  //   const updates: { [key: string]: any } = {};
-  //   updates[messageKey] = messageData;
-  //   await updateDoc(channelRef, updates); 
-  // }
-
   async sendMessage(channelId: string, message: Message) {
     const channelRef = collection(this.firestore.firestore, `channels/${channelId}/messages`);
     const timestamp = new Date().toISOString();

@@ -14,6 +14,7 @@ import { DocumentData, collection, doc, onSnapshot } from '@angular/fire/firesto
 import { ChannelsList } from '../../interfaces/channels-list';
 import { UsersList } from '../../interfaces/users-list';
 import { ChatService } from '../chat/chat.service';
+import { DirectmessageService } from './direct-message/directmessage.service';
 
 @Component({
   selector: 'app-conversations',
@@ -73,7 +74,8 @@ export class ConversationsComponent {
   constructor(
     public dialog: MatDialog,
     private firestore: FirestoreService,
-    public chatService: ChatService
+    public chatService: ChatService,
+    public DMservice: DirectmessageService
   ) {
     this.subChannelsList();
     this.subUsersList();

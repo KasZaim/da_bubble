@@ -15,6 +15,7 @@ import { ChannelsList } from '../../interfaces/channels-list';
 import { UsersList } from '../../interfaces/users-list';
 import { ChatService } from '../chat/chat.service';
 import { DirectmessageService } from './direct-message/directmessage.service';
+import { CurrentuserService } from '../../currentuser.service';
 
 @Component({
   selector: 'app-conversations',
@@ -75,10 +76,11 @@ export class ConversationsComponent {
     public dialog: MatDialog,
     private firestore: FirestoreService,
     public chatService: ChatService,
-    public DMservice: DirectmessageService
+    public DMservice: DirectmessageService,
+    private currentUser : CurrentuserService
   ) {
     this.subChannelsList();
-    this.subUsersList();
+    
   }
 
   subChannelsList() {
@@ -91,30 +93,10 @@ export class ConversationsComponent {
     })
   }
 
-  subUsersList() {
-    let ref = this.firestore.usersRef;
-    return onSnapshot(ref, (list) => {
-      this.usersList = [];
-      list.forEach(element => {
-        this.usersList.push(this.setUsersListObj(element.data(), element.id))
-      })
-    })
-  }
-
   setChannelsListObj(obj: any, id: string): ChannelsList {
     return {
       id: id || '',
       members: obj.members || [''],
-    }
-  }
-
-  setUsersListObj(obj: any, id: string): UsersList {
-    return {
-      id: id || '',
-      name: obj.name || '',
-      avatar: obj.avatar || '',
-      email: obj.email || '',
-      online: obj.online || false
     }
   }
 

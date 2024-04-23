@@ -80,7 +80,6 @@ export class ConversationsComponent {
     private currentUser : CurrentuserService
   ) {
     this.subChannelsList();
-    this.subUsersList();
     
   }
 
@@ -94,32 +93,10 @@ export class ConversationsComponent {
     })
   }
 
-  subUsersList() {
-    let ref = this.firestore.usersRef;
-    return onSnapshot(ref, (list) => {
-      this.usersList = [];
-      list.forEach(element => {
-        if (element.id !== this.currentUser.currentUserUid) {
-          this.usersList.push(this.setUsersListObj(element.data(), element.id))
-        }
-      })
-    })
-  }
-
   setChannelsListObj(obj: any, id: string): ChannelsList {
     return {
       id: id || '',
       members: obj.members || [''],
-    }
-  }
-
-  setUsersListObj(obj: any, id: string): UsersList {
-    return {
-      id: id || '',
-      name: obj.name || '',
-      avatar: obj.avatar || '',
-      email: obj.email || '',
-      online: obj.online || false
     }
   }
 

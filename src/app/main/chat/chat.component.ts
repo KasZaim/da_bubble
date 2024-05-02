@@ -36,14 +36,14 @@ import { Channel } from '../../interfaces/channel';
   styleUrl: './chat.component.scss'
 })
 export class ChatComponent implements AfterViewInit, AfterViewChecked {
-  @Output()threadOpen = new EventEmitter<boolean>();
+  @Output() threadOpen = new EventEmitter<boolean>();
   @ViewChild('chatContainer') private chatContainer!: ElementRef;
   messageText: string = '';
   isPickerVisible = false;
   public currentChannel!: Channel;
 
   ngAfterViewInit() {
-    this.scrollToBottom()
+    this.scrollToBottom();
   }
 
   ngAfterViewChecked() {
@@ -53,16 +53,16 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
   toggleThread() {
     this.threadOpen.emit(!this.threadOpen);
   }
-  
+
   constructor(
     public dialog: MatDialog,
-    public chatService: ChatService){
+    public chatService: ChatService) {
 
   }
   addEmoji(event: any) {
     console.log(event.emoji);
   }
-  
+
   togglePicker() {
     this.isPickerVisible = !this.isPickerVisible;
   }
@@ -78,10 +78,23 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
     return Object.keys(obj).length;
   }
 
-  openDialogAddMembers() {
-    this.dialog.open(DialogAddMemberToChnlComponent, {
-      panelClass: 'custom-dialog-br',
-    });
+  openDialogAddMembers(event: MouseEvent): void {
+    let element = event.target as Element | null;
+
+    if (element) {
+      let htmlElement = element as HTMLElement;
+      let boundingClientRect = htmlElement.getBoundingClientRect();
+
+      let dialogPosition = {
+        top: `${boundingClientRect.bottom + window.scrollY + 13.75}px`,
+        right: `${window.innerWidth - boundingClientRect.left - boundingClientRect.width + window.scrollX}px`
+      };
+
+      this.dialog.open(DialogAddMemberToChnlComponent, { // Ersetzen Sie DialogSomeComponent durch Ihre tatsächliche Dialogkomponente
+        position: dialogPosition,
+        panelClass: 'custom-dialog-br',
+      });
+    }
   }
 
   openDialogEditMessage(id: string) {
@@ -115,12 +128,11 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
       let boundingClientRect = htmlElement.getBoundingClientRect();
 
       let dialogPosition = {
-        top: `${boundingClientRect.bottom + window.scrollY + 15}px`,
-        left: `${boundingClientRect.left + window.scrollX - 280}px`,
+        top: `${boundingClientRect.bottom + window.scrollY + 13.75}px`,
+        right: `${window.innerWidth - boundingClientRect.left - boundingClientRect.width + window.scrollX}px`
       };
 
       this.dialog.open(DialogShowChannelMemberComponent, { // Ersetzen Sie DialogSomeComponent durch Ihre tatsächliche Dialogkomponente
-        width: '350px',
         position: dialogPosition,
       });
     }
@@ -134,15 +146,15 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
                           <img src="../../../assets/img/icons/emoji-${key}.svg">
                           <span>${value}</span> 
                        </div>`;
-  
+
       tooltip.innerHTML = content;
       tooltip.style.display = 'block';
       tooltip.style.left = `${+20}px`;
-    tooltip.style.top = `- 300px`
+      tooltip.style.top = `- 300px`;
     }
   }
-  
-  
+
+
   hideTooltip() {
     const tooltip = document.getElementById('customTooltip');
     if (tooltip) {
@@ -152,12 +164,12 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
   async send() {
     if (this.messageText.trim() !== '') {
       const message: Message = {
-        avatar: '', 
+        avatar: '',
         name: '', // wird im chat.service übernommen 
-        time: new Date().toISOString(), 
+        time: new Date().toISOString(),
         message: this.messageText,
         createdAt: serverTimestamp(),
-        reactions: {} 
+        reactions: {}
       };
 
       await this.chatService.sendMessage(this.chatService.currentChannelID, message);

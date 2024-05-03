@@ -100,6 +100,12 @@ main {
 
 .channels,
 .directmessages {
+
+    mat-expansion-panel-header {
+        h3 {
+            font-size: 1.25rem;
+        }
+    }
     
     mat-expansion-panel-header:hover {
         background: none !important;
@@ -320,6 +326,7 @@ mat-button-toggle {
             overflow-wrap: break-word;
             white-space: break-spaces;
             max-width: 9.75rem;
+            text-align: start;
         }
     }
 

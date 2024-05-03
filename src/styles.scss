@@ -39,9 +39,9 @@ html {
   height: 100vh;
 }
 
-body {
-  height: 100%;
-}
+// body {
+//   height: 100%;
+// }
 
 * {
   --purple-1: #444DF2;
@@ -55,6 +55,7 @@ body {
   --text-gray: #686868;
   --online-green: #92C83E;
   --error: #ED1E79;
+  --link: #1381FF;
 
   margin: 0;
   padding: 0;
@@ -68,24 +69,28 @@ a {
   font-size: 1.125rem;
 }
 
-.custom-dialog
-  .mdc-dialog__container
-  .mat-mdc-dialog-surface {
+.custom-dialog .mdc-dialog__container .mat-mdc-dialog-surface {
   border-radius: 1.875rem;
 }
 
-.custom-dialog-br
-  .mdc-dialog__container
-  .mat-mdc-dialog-surface {
+.custom-dialog-br .mdc-dialog__container .mat-mdc-dialog-surface {
   border-radius: 1.875rem 0 1.875rem 1.875rem;
-  bottom: 8rem;
-  right: 12rem;
 }
+
 .mat-autocomplete-panel {
   border-radius: 10px !important;
 }
-.cdk-overlay-pane:not(.mat-mdc-autocomplete-panel-above) div.mat-mdc-autocomplete-panel{
-  border-radius: 0 0.8rem 0.8rem  0.8rem!important;
+
+.custom-dialog-mid {
+  border-radius: 1.875rem !important;
+  overflow: hidden;
+}
+
+.mat-mdc-icon-button .mat-mdc-button-persistent-ripple::before {
+  background-color: unset !important; }
+
+.cdk-overlay-pane:not(.mat-mdc-autocomplete-panel-above) div.mat-mdc-autocomplete-panel {
+  border-radius: 0 0.8rem 0.8rem 0.8rem !important;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -100,20 +105,44 @@ a {
 
 /* Chrome, Edge, Safari */
 *::-webkit-scrollbar {
-	width: 6px; /* vertical scrollbar */
+  width: 6px;
+  /* vertical scrollbar */
 }
 
 *::-webkit-scrollbar-track {
-	background: transparent;
+  background: transparent;
 }
 
 *::-webkit-scrollbar-thumb {
-	background: black;
-	border-radius: 1.875rem;
-	border: 0;
+  background: black;
+  border-radius: 1.875rem;
+  border: 0;
 }
 
 *::-webkit-scrollbar-thumb:hover {
-	background: var(--purple-3);
+  background: var(--purple-3);
 }
+
+button.closeButton  {
+  padding: 0.5rem !important;
+  width: 2.5rem !important;
+  height: 2.5rem !important;
+
+  ::ng-deep::ng-deep .mat-mdc-button-persistent-ripple,
+  ::ng-deep::ng-deep .mat-mdc-button-touch-target,
+  ::ng-deep::ng-deep .mat-mdc-focus-indicator,
+  ::ng-deep::ng-deep .mat-ripple {
+      width: 2.5rem !important;
+      height: 2.5rem !important;
+  }
+
+  &:hover {
+      background-color: var(--bg-color) !important;
+
+      >img {
+          content: url(./assets/img/icons/close-purple.svg) !important;
+      }
+  }
+}
+
 /* Chrome, Edge, Safari */

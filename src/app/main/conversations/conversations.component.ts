@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Output } from '@angular/core';
-import { MatExpansionModule } from '@angular/material/expansion';
+import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
+import { MatExpansionModule, MatExpansionPanel } from '@angular/material/expansion';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { CommonModule } from '@angular/common';
 import {
@@ -34,53 +34,27 @@ import { CurrentuserService } from '../../currentuser.service';
 export class ConversationsComponent {
   @Output() openDM = new EventEmitter<string>();
   @Output() user = new EventEmitter<UsersList>();
-
-  contacts = [
-    {
-      avatar: '6',
-      name: 'Frederick Beck (Du)',
-      online: true,
-    },
-    {
-      avatar: '5',
-      name: 'Sofia Müller',
-      online: true,
-    },
-    {
-      avatar: '4',
-      name: 'Noah Braun',
-      online: true,
-    },
-    {
-      avatar: '1',
-      name: 'Elise Roth',
-      online: false,
-    },
-    {
-      avatar: '2',
-      name: 'Elias Neumann',
-      online: true,
-    },
-
-    {
-      avatar: '3',
-      name: 'Steffen Hoffmann',
-      online: true,
-    },
-  ];
+  
   channelsList: ChannelsList[] = [];
   usersList: UsersList[] = [];
+  selectedChannel = '';
+  selectedDirectmessage = '';
+
 
 
   constructor(
     public dialog: MatDialog,
-    private firestore: FirestoreService,
+    public firestore: FirestoreService,
     public chatService: ChatService,
     public DMservice: DirectmessageService,
     private currentUser: CurrentuserService,
   ) {
     this.subChannelsList();
 
+  }
+
+  memberOfChannel(channel: ChannelsList) {
+    return channel.channelData.members.some(member => member.id === this.currentUser.currentUserUid);
   }
 
   subChannelsList() {
@@ -96,21 +70,32 @@ export class ConversationsComponent {
   setChannelsListObj(obj: any, id: string): ChannelsList {
     return {
       id: id || '',
-      channelData: obj.channelData || null,
+      channelData: obj || null,
     };
   }
 
-  openDialog() {
+  openDialog(event: MouseEvent) {
+    event.stopPropagation()
+    console.log(this.firestore.currentUser$)
     this.dialog.open(DialogAddChannelComponent, {
       panelClass: 'custom-dialog'
     });
   }
+
   openComponent(componentName: string,) {
     this.openDM.emit(componentName);
 
   }
 
+  openChannel(channelId: string) {
+    this.selectedChannel = channelId;
+    this.selectedDirectmessage = '';
+    this.chatService.openChannel(channelId);
+  }
+
   openDirectMessage(user: UsersList) {
+    this.selectedDirectmessage = user.id;
+    this.selectedChannel = '';
     this.user.emit(user);
   }
 }

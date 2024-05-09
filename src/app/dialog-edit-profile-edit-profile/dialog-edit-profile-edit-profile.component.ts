@@ -43,6 +43,12 @@ export class DialogEditProfileEditProfileComponent{
     avatar: '',
     online: false
   };
+  name = '';
+  email = '';
+  editing = false;
+  reloginError = false;
+  emailError = false;
+  nameError = false;
 
   constructor(
     public dialogRef: MatDialogRef<DialogEditProfileEditProfileComponent>,
@@ -54,6 +60,59 @@ export class DialogEditProfileEditProfileComponent{
         // Führen Sie hier Aktionen aus, die vom aktuellen Benutzerstatus abhängen
       });
     }
+
+    editProfile() {
+      this.name = this.currentUser.name;
+      this.email = this.currentUser.email;
+      this.editing = true;
+    }
+
+    cancel() {
+      this.editing = false;
+      this.name = this.currentUser.name;
+      this.email = this.currentUser.email;
+    }
+
+    save() {
+      if (!this.name) {
+        this.nameError = true;
+      } else if (!this.email) {
+        this.emailError = true;
+      } else {
+        this.nameError = false;
+        this.emailError = false;
+        this.updateUser()
+      }
+    }
+
+    updateUser() {
+      this.firestore.updateEmail(this.email)
+        .then(() => {
+          return this.firestore.updateUser(this.name, this.email, this.currentUser.avatar);
+        })
+        .then(() => {
+          console.log('User updated successfully');
+          this.editing = false;
+          this.reloginError = false;
+          this.emailError = false;
+        })
+        .catch(error => {
+          switch (error.code) {
+            case 'auth/requires-recent-login':
+              this.emailError = false;
+              this.reloginError = true;
+              break;
+            case 'auth/invalid-email':
+              this.reloginError = false;
+              this.emailError = true;
+              break;
+            default:
+              console.log('An unexpected error occurred.');
+              break;
+          }
+        });
+    }
+    
 
     closeDialog() {
       this.dialogRef.close();

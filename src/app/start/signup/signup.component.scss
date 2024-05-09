@@ -38,7 +38,6 @@ form {
     display: flex;
     flex-direction: column;
     gap: 2.5rem;
-    margin-bottom: 2rem;
 
     >div {
         position: relative;
@@ -50,8 +49,8 @@ form {
             padding: 1.125rem 2rem 1.125rem 5.375rem;
             border-radius: 6.25rem;
             background: var(--bg-color);
-            color: var(--text-gray);
-            font-size: 18px;
+            color: var(--black);
+            font-size: 1.125rem;
             font-weight: 500;
             line-height: 120%;
             /* 21.6px */
@@ -123,8 +122,8 @@ mat-checkbox {
 
     ::ng-deep::ng-deep .mdc-checkbox .mdc-checkbox__native-control:enabled:focus:checked~.mdc-checkbox__background,
     ::ng-deep::ng-deep .mdc-checkbox .mdc-checkbox__native-control:enabled:checked~.mdc-checkbox__background {
-        border-color: var(--purple-1); 
-        background-color: var(--purple-1); 
+        border-color: var(--purple-1);
+        background-color: var(--purple-1);
     }
 
     ::ng-deep::ng-deep .mdc-checkbox .mdc-checkbox__native-control:focus:checked~.mdc-checkbox__ripple {
@@ -144,8 +143,6 @@ mat-checkbox {
     }
 }
 
-// TODO: change checkbox checked color
-
 ::ng-deep::ng-deep .mat-mdc-checkbox label {
     color: var(--menu-color);
 
@@ -155,6 +152,7 @@ mat-checkbox {
     font-style: normal;
     font-weight: 400;
     line-height: 120%;
+    letter-spacing: normal;
     /* 1.2rem */
 }
 
@@ -185,6 +183,7 @@ mat-checkbox {
         font-style: normal;
         font-weight: 700;
         line-height: normal;
+        letter-spacing: normal;
     }
 
     &:hover {
@@ -207,4 +206,38 @@ mat-checkbox {
     to {
         opacity: 1;
     }
+}
+
+// Media Queries 
+
+@media (max-width: 431px) {
+
+    .goBack {
+        top: 2.1875rem;
+        left: 1.25rem;
+    }
+
+    .description {
+        gap: 0.9375rem;
+        margin-bottom: 1.5rem;
+
+        >h1 {
+            font-size: 2rem;
+        }
+
+        >p {
+            font-size: 1.0625rem;
+        }
+    }
+
+    form {
+        gap: 1.875rem;
+        
+        >div {
+            >input {
+                padding: 0.8125rem 2rem 0.8125rem 5.375rem;
+            }
+        }
+    }
+    // TODO: fix sentence to long = overflowing
 }

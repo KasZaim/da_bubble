@@ -8,7 +8,7 @@ import {
   MatDialogContent,
   MatDialogRef,
 } from '@angular/material/dialog';
-import { MatAutocomplete, MatAutocompleteModule, MatOption } from '@angular/material/autocomplete';
+import { MatAutocomplete, MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
 import { map, startWith } from 'rxjs/operators';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
@@ -16,7 +16,8 @@ import { Observable } from 'rxjs';
 import { ChatService } from '../main/chat/chat.service';
 import { UsersList } from '../interfaces/users-list';
 import { MatChipGrid,MatChipsModule} from '@angular/material/chips';
-import { MatIcon } from '@angular/material/icon';
+import { MatIcon, MatIconModule } from '@angular/material/icon';
+import { MatOption } from '@angular/material/core';
 interface Message {
   avatar: string;
   name: string;
@@ -41,6 +42,7 @@ interface Message {
     MatChipsModule,
     MatOption,
     MatIcon,
+    MatIconModule,
     MatAutocomplete
   ],
   templateUrl: './dialog-add-member-to-chnl.component.html',

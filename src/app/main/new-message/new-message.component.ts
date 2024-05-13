@@ -43,7 +43,9 @@ import { Observable, map, startWith } from 'rxjs';
 })
 export class NewMessageComponent implements OnInit {
   messageText: string = '';
+  startsWith: string = '';
   isPickerVisible = false;
+  finished: boolean = false;
   removable = true;
   filteredOptions!: Observable<UsersList[]>;
   separatorKeysCodes: number[] = [ENTER, COMMA];
@@ -52,7 +54,7 @@ export class NewMessageComponent implements OnInit {
 
 
   constructor(public DMSerivce: DirectmessageService, public chatService : ChatService) {
-
+    
   }
   ngOnInit() {
     this.filteredOptions = this.nameControl.valueChanges.pipe(
@@ -86,4 +88,14 @@ export class NewMessageComponent implements OnInit {
   getAvatarPath(avatarNumber: string): string {
     return `./../../assets/img/avatar/${avatarNumber}.svg`;
   }
+
+  finishInput() {
+    if (this.startsWith.startsWith('#')) {
+      this.finished = true;
+    }else{
+      this.finished = false;
+    }
+    
+  }
+  
 }

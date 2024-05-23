@@ -4,6 +4,7 @@ import { SignupComponent } from '../signup/signup.component';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import { NgForm, NgModel } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-avatar',
@@ -22,12 +23,20 @@ export class AvatarComponent {
     
   }
 
+  constructor(private router: Router){
+    
+  }
+
   selectAvatar(number: string) {
     this.avatar = number;
   }
 
   submit() {
     if(this.avatar !== '') {
+      this.accountCreated = true;
+      setTimeout(() => {
+        this.submitAvatar.emit(this.avatar)
+      }, 2500);
       this.accountCreated = true;
       setTimeout(() => {
         this.submitAvatar.emit(this.avatar)

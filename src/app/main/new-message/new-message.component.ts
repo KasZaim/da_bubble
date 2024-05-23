@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, EventEmitter, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
@@ -37,7 +37,7 @@ import { UsersList } from '../../interfaces/users-list';
   templateUrl: './new-message.component.html',
   styleUrl: './new-message.component.scss'
 })
-export class NewMessageComponent implements OnInit {
+export class NewMessageComponent {
   messageText: string = '';
   startsWith: string = '';
   isPickerVisible = false;

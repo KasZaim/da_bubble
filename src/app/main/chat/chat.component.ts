@@ -63,7 +63,7 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
 
   }
   addEmoji(event: any) {
-    console.log(event.emoji);
+    this.messageText += event.emoji.native;
   }
 
   togglePicker() {

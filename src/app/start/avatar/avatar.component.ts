@@ -15,7 +15,7 @@ import { Router } from '@angular/router';
 export class AvatarComponent {
   avatar = '';
   error = false;
-  accountCreated = true;
+  accountCreated = false;
   @Output() submitAvatar = new EventEmitter<string>();
 
   constructor(private router: Router){

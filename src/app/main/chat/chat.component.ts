@@ -69,6 +69,11 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
   togglePicker() {
     this.isPickerVisible = !this.isPickerVisible;
   }
+  closePicker(event: Event){
+    if (this.isPickerVisible) {
+      this.isPickerVisible = false;
+    }
+  }
   objectKeys(obj: object) {
     return Object.keys(obj);
   }

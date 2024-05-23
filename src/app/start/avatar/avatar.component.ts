@@ -4,7 +4,6 @@ import { SignupComponent } from '../signup/signup.component';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import { NgForm, NgModel } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-avatar',
@@ -18,10 +17,6 @@ export class AvatarComponent {
   error = false;
   accountCreated = false;
   @Output() submitAvatar = new EventEmitter<string>();
-
-  constructor(private router: Router){
-    
-  }
 
   constructor(private router: Router){
     

@@ -41,6 +41,16 @@ export class FirestoreService {
         }
       });
     });
+
+        // Event listener für das Schließen des Fensters oder Tabs
+        window.addEventListener('beforeunload', this.setOfflineStatus);
+        window.addEventListener('unload', this.setOfflineStatus);
+  }
+
+  private setOfflineStatus = () => {
+    if (this.currentUserID) {
+      this.updateUserStatus(this.currentUserID, false);
+    }
   }
 
   private updateUserStatus(userId: string | undefined, status: boolean) {

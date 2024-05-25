@@ -85,4 +85,11 @@ export class DirectMessageComponent {
     }
 
   }
+
+  onKeydown(event: KeyboardEvent) {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault(); // Verhindert den Zeilenumbruch
+      this.send(); // Nachricht senden
+    }
+  }
 }

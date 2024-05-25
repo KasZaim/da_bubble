@@ -195,6 +195,13 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
     }
   }
 
+  onKeydown(event: KeyboardEvent) {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault(); // Verhindert den Zeilenumbruch
+      this.send(); // Nachricht senden
+    }
+  }
+  
   async scrollToBottom(): Promise<void> {
     try {
       this.chatContainer.nativeElement.scrollTop = this.chatContainer.nativeElement.scrollHeight;

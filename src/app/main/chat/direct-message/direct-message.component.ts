@@ -59,8 +59,13 @@ export class DirectMessageComponent {
   togglePicker() {
     this.isPickerVisible = !this.isPickerVisible;
   }
+  closePicker(event: Event) {
+    if (this.isPickerVisible) {
+      this.isPickerVisible = false;
+    }
+  }
   addEmoji(event: any) {
-    console.log(event.emoji);
+    this.messageText += event.emoji.native;
   }
   openDialogChannelInfo() {
     this.dialog.open(DialogChannelInfoComponent, {

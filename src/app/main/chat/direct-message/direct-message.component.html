@@ -1,4 +1,4 @@
-<section class="chat-body">
+<section class="chat-body" (click)="closePicker($event)">
     <div class="chat-header">
         <mat-button-toggle-group class="contact-list" (click)="openProfileCard()" vertical="true"
             hideSingleSelectionIndicator="true">
@@ -119,7 +119,7 @@
                             <img src="../../../assets/img/icons/add-gray.svg" alt="Add image">
                         </button>
                         <div class="vector"></div>
-                        <button mat-icon-button (click)="togglePicker()">
+                        <button mat-icon-button (click)="togglePicker(); $event.stopPropagation()">
                             <img src="../../../assets/img/icons/sentiment_satisfied.svg" alt="Add emoji">
                         </button>
     

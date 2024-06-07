@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FirestoreService } from '../../firestore.service';
-import { collection, doc, onSnapshot, orderBy, query, setDoc, getDocs, serverTimestamp } from '@angular/fire/firestore';
+import { collection, doc, onSnapshot, orderBy, query, setDoc, getDocs, serverTimestamp, getDoc, updateDoc } from '@angular/fire/firestore';
 import { Channel } from '../../interfaces/channel';
 import { Message } from '../../interfaces/message';
 import { CurrentuserService } from '../../currentuser.service';
@@ -208,5 +208,28 @@ export class ChatService {
 
   setComponent(componentName: string) {
     this.openComponent = componentName;
+  }
+  async addReaction( messageId: string,messageKey:any, emoji: string) {
+    console.log(messageKey)
+    const messageRef = doc(this.firestore.firestore, `channels/${this.currentChannelID}/messages/0001`);
+    const messageSnapshot = await getDoc(messageRef);
+    
+    if (!messageSnapshot.exists()) {
+      console.error(`Message with ID ${messageId} not found`);
+      return;
+    }
+  
+    const messageData = messageSnapshot.data();
+    console.log(messageData)
+    if (!messageData['reactions']) {
+      messageData['reactions'] = {};
+    }
+  
+    if (!messageData['reactions'][emoji]) {
+      messageData['reactions'][emoji] = 0;
+    }
+  
+    messageData['reactions'][emoji]++;
+    await updateDoc(messageRef, { reactions: messageData['reactions'] });
   }
 }

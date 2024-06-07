@@ -85,12 +85,16 @@
                                 </div>
                                 }
                                 }
-                                <img src="../../../assets/img/icons/add_reaction.svg" alt="Add reaction">
+                                <img src="../../../assets/img/icons/add_reaction.svg" alt="Add reaction" (click)="togglePicker('reaction', message.key, message.value.id); $event.stopPropagation()">
+                                
                             </div>
                         </div>
                     </div>
                 </div>
             }
+            <div class="emoji-picker" *ngIf="isPickerVisible && pickerContext === 'reaction'">
+                <emoji-mart (emojiClick)="addEmoji($event)"></emoji-mart>
+              </div>
 
 
             <!-- TODO: add focus textarea on click -->
@@ -118,11 +122,11 @@
                             <img src="../../../assets/img/icons/add-gray.svg" alt="Add image">
                         </button>
                         <div class="vector"></div>
-                        <button mat-icon-button (click)="togglePicker(); $event.stopPropagation()">
+                        <button mat-icon-button (click)="togglePicker('input', '', ''); $event.stopPropagation()">
                             <img src="../../../assets/img/icons/sentiment_satisfied.svg" alt="Add emoji">
                         </button>
     
-                        <div class="emoji-picker" *ngIf="isPickerVisible">
+                        <div class="emoji-picker" *ngIf="isPickerVisible && pickerContext === 'input'">
                             <emoji-mart (emojiClick)="addEmoji($event)"></emoji-mart>
                         </div>
                         <button mat-icon-button (click)="addAtSymbol()">

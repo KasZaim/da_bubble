@@ -53,6 +53,9 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
   @ViewChild('chatContainer') private chatContainer!: ElementRef;
   messageText: string = '';
   isPickerVisible = false;
+  pickerContext: string = '';
+  currentMessageId: string = '';
+  currentMessageKey: string = ''; 
   formCtrl = new FormControl();
   filteredMembers: Observable<UsersList[]>;
   showUserlist = false;
@@ -120,15 +123,33 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
   }
 
   addEmoji(event: any) {
-    this.messageText += event.emoji.native;
+    if (this.pickerContext === 'input') {
+      this.messageText += event.emoji.native;
+    } else if(this.pickerContext === 'reaction') {
+      this.addReactionToMessage(this.currentMessageId,this.currentMessageKey,event.emoji.native);
+    }
   }
 
-  togglePicker() {
+  togglePicker(context: string, messageKey : any, messageId: string) {
     this.isPickerVisible = !this.isPickerVisible;
+    this.pickerContext = context;
+    if (context === 'reactions') {
+      this.currentMessageId = messageId;
+      this.currentMessageKey = messageKey;
+    }
   }
+
+  addReactionToMessage( messageId: string,messageKey:any, emoji: string) {
+    this.chatService.addReaction(messageId,messageKey, emoji)
+      .then(() => console.log('Reaction added'))
+      .catch(error => console.error('Error adding reaction: ', error));
+  }
+
   closePicker(event: Event) {
     if (this.isPickerVisible) {
       this.isPickerVisible = false;
+      this.pickerContext = '';
+      this.currentMessageId = '';
     }
   }
   objectKeys(obj: object) {

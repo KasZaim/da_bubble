@@ -1,5 +1,5 @@
+import { Component, ElementRef, EventEmitter, Input, Output, ViewChild, AfterViewInit, AfterViewChecked } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, EventEmitter, Renderer2, Input, Output, ViewChild, AfterViewInit, AfterViewChecked } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
@@ -25,7 +25,6 @@ import { HighlightMentionsPipe } from '../../pipes/highlist-mentions.pipe';
 import { PofileInfoCardComponent } from '../../pofile-info-card/pofile-info-card.component';
 import { ImageService } from '../../image.service';
 
-
 @Component({
   selector: 'app-chat',
   standalone: true,
@@ -46,10 +45,10 @@ import { ImageService } from '../../image.service';
     PofileInfoCardComponent
   ],
   templateUrl: './chat.component.html',
-  styleUrl: './chat.component.scss'
+  styleUrls: ['./chat.component.scss']
 })
 export class ChatComponent implements AfterViewInit, AfterViewChecked {
-  @Output() threadOpen = new EventEmitter<boolean>();
+  @Output() threadOpen = new EventEmitter<{ channelId: string, messageId: string }>();
   @ViewChild('chatContainer') private chatContainer!: ElementRef;
   messageText: string = '';
   isPickerVisible = false;
@@ -59,19 +58,18 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
   public currentChannel!: Channel;
   currentInputValue: string = '';
 
-  @ViewChild('messageInput')
-  messageInput!: ElementRef<HTMLInputElement>;
-  @ViewChild('message')
-  message!: ElementRef<HTMLInputElement>;
+  @ViewChild('messageInput') messageInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('message') message!: ElementRef<HTMLInputElement>;
 
   constructor(
     public dialog: MatDialog,
     public chatService: ChatService,
     public currentUser: CurrentuserService,
-    public imageService: ImageService) {
+    public imageService: ImageService
+  ) {
     this.filteredMembers = this.formCtrl.valueChanges.pipe(
       startWith(''),
-      map((value: string | null) => value ? this._filter(value) : [])
+      map((value: string | null) => (value ? this._filter(value) : []))
     );
   }
 
@@ -83,13 +81,19 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
     this.scrollToBottom();
   }
 
+  toggleThread(channelId: string, messageId: string) {
+    this.threadOpen.emit({ channelId, messageId });
+    if (window.matchMedia('(max-width: 431px)').matches) {
+      this.chatService.mobileOpen = 'thread';
+    }
+  }
+  
   onMessageClick(event: MouseEvent) {
     const target = event.target as HTMLElement;
     if (target.classList.contains('highlight-mention')) {
       const username = target.getAttribute('data-username');
-      if (username) { // Stelle sicher, dass username nicht null ist
+      if (username) {
         this.openProfileCard(username);
-        // Führe hier zusätzliche Aktionen aus
       } else {
         console.error('Kein Benutzername definiert für dieses Element');
       }
@@ -97,7 +101,6 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
   }
 
   openProfileCard(username: string) {
-    // Suche nach dem Benutzer in der Benutzerliste
     const user = this.chatService.usersList.find(u => u.name === username);
     if (user) {
       this.dialog.open(PofileInfoCardComponent, {
@@ -112,13 +115,6 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
     console.log(this.imageService.storage);
   }
 
-  toggleThread() {
-    this.threadOpen.emit(!this.threadOpen);
-    if (window.matchMedia('(max-width: 431px)').matches) {
-      this.chatService.mobileOpen = 'thread';
-    }
-  }
-
   addEmoji(event: any) {
     this.messageText += event.emoji.native;
   }
@@ -126,11 +122,13 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
   togglePicker() {
     this.isPickerVisible = !this.isPickerVisible;
   }
+
   closePicker(event: Event) {
     if (this.isPickerVisible) {
       this.isPickerVisible = false;
     }
   }
+
   objectKeys(obj: object) {
     return Object.keys(obj);
   }
@@ -162,9 +160,7 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
         };
       }
 
-
-
-      this.dialog.open(DialogAddMemberToChnlComponent, { // Ersetzen Sie DialogSomeComponent durch Ihre tatsächliche Dialogkomponente
+      this.dialog.open(DialogAddMemberToChnlComponent, {
         position: dialogPosition,
         panelClass: 'custom-dialog-br',
       });
@@ -179,8 +175,6 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
     //   data: { message: message.message }
     // });
   }
-
-
 
   openDialogChannelInfo() {
     this.dialog.open(DialogChannelInfoComponent, {
@@ -206,7 +200,7 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
         right: `${window.innerWidth - boundingClientRect.left - boundingClientRect.width + window.scrollX}px`
       };
 
-      this.dialog.open(DialogShowChannelMemberComponent, { // Ersetzen Sie DialogSomeComponent durch Ihre tatsächliche Dialogkomponente
+      this.dialog.open(DialogShowChannelMemberComponent, {
         position: dialogPosition,
       });
     }
@@ -215,7 +209,6 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
   showTooltip(key: string, value: number) {
     const tooltip = document.getElementById('customTooltip');
     if (tooltip) {
-      // Dynamisches Erstellen des HTML-Inhalts mit den übergebenen Parametern
       const content = `<div> 
                           <img src="../../../assets/img/icons/emoji-${key}.svg">
                           <span>${value}</span> 
@@ -228,19 +221,19 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
     }
   }
 
-
   hideTooltip() {
     const tooltip = document.getElementById('customTooltip');
     if (tooltip) {
-      tooltip.style.display = 'none'; // Tooltip verstecken
+      tooltip.style.display = 'none';
     }
   }
+
   async send() {
     if (this.messageText.trim() !== '') {
       const message: Message = {
         id: '',
         avatar: '',
-        name: '', // wird im chat.service übernommen 
+        name: '',
         time: new Date().toISOString(),
         message: this.messageText,
         createdAt: serverTimestamp(),
@@ -249,14 +242,14 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
 
       await this.chatService.sendMessage(this.chatService.currentChannelID, message);
       await this.scrollToBottom();
-      this.messageText = ''; // Textfeld nach dem Senden leeren
+      this.messageText = '';
     }
   }
 
   onKeydown(event: KeyboardEvent) {
     if (event.key === 'Enter' && !event.shiftKey) {
-      event.preventDefault(); // Verhindert den Zeilenumbruch
-      this.send(); // Nachricht senden
+      event.preventDefault();
+      this.send();
     }
   }
 
@@ -284,7 +277,6 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
     }
 
     const previousMessageTime = previousMessage.time;
-
     const previousMessageDate = new Date(previousMessageTime).setHours(0, 0, 0, 0);
     const newMessageDate = new Date(newMessageTime).setHours(0, 0, 0, 0);
 
@@ -313,16 +305,13 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
 
   dayTime(timestamp: string): string {
     const date = new Date(timestamp);
-
     const options: Intl.DateTimeFormatOptions = { hour: '2-digit', minute: '2-digit', hour12: false };
     return date.toLocaleTimeString('de-DE', options);
   }
 
   openProfile(username: string): void {
-    // Handle the click event for the mention
     console.log('Clicked mention:', username);
   }
-
 
   onInputChange(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -331,19 +320,15 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
 
   selected(event: MatAutocompleteSelectedEvent): void {
     const selectedUserName = event.option.viewValue;
-
     this.formCtrl.setValue('', { emitEvent: false });
-
     this.messageText = this.currentInputValue + `${selectedUserName} `;
     this.currentInputValue = this.messageText;
-
     this.messageInput.nativeElement.focus();
   }
 
   mentionUser(value: string): boolean {
     const atIndex = value.lastIndexOf('@');
     if (atIndex === -1) return false;
-
     const charAfterAt = value.charAt(atIndex + 1);
     return charAfterAt !== ' ';
   }
@@ -364,6 +349,4 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
     }
     this.messageInput.nativeElement.focus();
   }
-
-  // TODO: optimize scroll to bottom (only after sending a message and when opening the chat)
 }

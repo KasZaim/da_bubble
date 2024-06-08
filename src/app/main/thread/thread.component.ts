@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output, OnInit, Input } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
 import { ChatService } from '../chat/chat.service';
@@ -13,7 +13,7 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './thread.component.html',
   styleUrls: ['./thread.component.scss']
 })
-export class ThreadComponent implements OnInit {
+export class ThreadComponent implements OnInit, OnChanges {
   @Input() channelId!: string;
   @Input() messageId!: string;
   @Output() threadClose = new EventEmitter<boolean>();
@@ -21,10 +21,16 @@ export class ThreadComponent implements OnInit {
   messageText: string = '';
   isPickerVisible = false;
 
-  constructor(private chatService: ChatService) { }
+  constructor(private chatService: ChatService) {}
 
   ngOnInit() {
     this.loadMessages();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['channelId'] || changes['messageId']) {
+      this.loadMessages();
+    }
   }
 
   closeThread() {
@@ -53,6 +59,7 @@ export class ThreadComponent implements OnInit {
       };
       await this.chatService.sendThreadMessage(this.channelId, this.messageId, message);
       this.messageText = '';
+      this.loadMessages();
     }
   }
 
@@ -71,15 +78,15 @@ export class ThreadComponent implements OnInit {
     this.messageText += event.emoji.native;
   }
 
-  objectKeys(obj: object): string[] {
+  objectKeys(obj: any): string[] {
     return Object.keys(obj);
   }
 
-  objectValues(obj: object): any[] {
+  objectValues(obj: any): any[] {
     return Object.values(obj);
   }
 
-  objectKeysLength(obj: object | string): number {
+  objectKeysLength(obj: any | string): number {
     return Object.keys(obj).length;
   }
 }

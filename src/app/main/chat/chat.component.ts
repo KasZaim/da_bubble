@@ -52,6 +52,9 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
   @ViewChild('chatContainer') private chatContainer!: ElementRef;
   messageText: string = '';
   isPickerVisible = false;
+  pickerContext: string = '';
+  currentMessageId: string = '';
+  currentMessageKey: string = ''; 
   formCtrl = new FormControl();
   filteredMembers: Observable<UsersList[]>;
   showUserlist = false;
@@ -115,17 +118,41 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
     console.log(this.imageService.storage);
   }
 
-  addEmoji(event: any) {
-    this.messageText += event.emoji.native;
+  toggleThread() {
+    this.threadOpen.emit(!this.threadOpen);
+    if (window.matchMedia('(max-width: 768px)').matches) {
+      this.chatService.mobileOpen = 'thread';
+    }
   }
 
-  togglePicker() {
+  addEmoji(event: any) {
+    if (this.pickerContext === 'input') {
+      this.messageText += event.emoji.native;
+    } else if(this.pickerContext === 'reaction') {
+      this.addReactionToMessage(this.currentMessageId,this.currentMessageKey,event.emoji.native);
+    }
+  }
+
+  togglePicker(context: string, messageKey : any, messageId: string) {
     this.isPickerVisible = !this.isPickerVisible;
+    this.pickerContext = context;
+    if (context === 'reactions') {
+      this.currentMessageId = messageId;
+      this.currentMessageKey = messageKey;
+    }
+  }
+
+  addReactionToMessage( messageId: string,messageKey:any, emoji: string) {
+    this.chatService.addReaction(messageId,messageKey, emoji)
+      .then(() => console.log('Reaction added'))
+      .catch(error => console.error('Error adding reaction: ', error));
   }
 
   closePicker(event: Event) {
     if (this.isPickerVisible) {
       this.isPickerVisible = false;
+      this.pickerContext = '';
+      this.currentMessageId = '';
     }
   }
 
@@ -149,7 +176,7 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
       let boundingClientRect = htmlElement.getBoundingClientRect();
       let dialogPosition;
 
-      if (window.matchMedia('(max-width: 431px)').matches) {
+      if (window.matchMedia('(max-width: 768px)').matches) {
         dialogPosition = {
           top: `${boundingClientRect.bottom + window.scrollY + 10}px`,
         };
@@ -269,8 +296,14 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
     }
   }
 
-  isLater(newMessageTime: string, index: string): boolean {
-    const previousMessage = this.chatService.currentChannel.messages?.get(index);
+  padNumber(num: number, size: number) {
+    let s = num + '';
+    while (s.length < size) s = '0' + s;
+    return s;
+  }
+
+  isLater(newMessageTime: string, index: number): boolean {
+    const previousMessage = this.chatService.currentChannel.messages?.get(this.padNumber(index, 4));
 
     if (!previousMessage) {
       return false;

@@ -28,7 +28,7 @@
         <div class="chat" #chatContainer>
             <!-- TODO: Add answers to thread amount -->
             @for (message of chatService.currentChannel.messages | keyvalue; track message; let  i = $index) {
-                @if (i == 0 || isLater(message.value.time, (i - 1).toString())) {
+                @if (i == 0 || isLater(message.value.time, i - 1)) {
                     <div class="day-date">
                         <h2>{{ dayDate(message.value.time) }}</h2>
                         <div class="vector"></div>
@@ -55,8 +55,6 @@
                         </mat-menu>
                     </div>
     
-    
-                    <!-- TODO: only allowed to edit my own messages -->
                     @if (message.value.avatar.length > 1) {
                         <img src="{{ message.value.avatar }}">
                     } @else {
@@ -87,12 +85,16 @@
                                 </div>
                                 }
                                 }
-                                <img src="../../../assets/img/icons/add_reaction.svg" alt="Add reaction">
+                                <img src="../../../assets/img/icons/add_reaction.svg" alt="Add reaction" (click)="togglePicker('reaction', message.key, message.value.id); $event.stopPropagation()">
+                                
                             </div>
                         </div>
                     </div>
                 </div>
             }
+            <div class="emoji-picker" *ngIf="isPickerVisible && pickerContext === 'reaction'">
+                <emoji-mart (emojiClick)="addEmoji($event)"></emoji-mart>
+              </div>
 
 
             <!-- TODO: add focus textarea on click -->
@@ -105,7 +107,7 @@
                     <h1>{{chatService.currentChannel.name}}</h1>
                 </div>
                 <span>
-                    <button>&#64;{{chatService.currentChannel.creator}}</button>
+                    <button (click)="openProfileCard(chatService.currentChannel.creator)">&#64;{{chatService.currentChannel.creator}}</button>
                     hat diesen Channel neu erstellt und das ist der Anfang des Channels.
                 </span>
             </div>
@@ -120,11 +122,11 @@
                             <img src="../../../assets/img/icons/add-gray.svg" alt="Add image">
                         </button>
                         <div class="vector"></div>
-                        <button mat-icon-button (click)="togglePicker(); $event.stopPropagation()">
+                        <button mat-icon-button (click)="togglePicker('input', '', ''); $event.stopPropagation()">
                             <img src="../../../assets/img/icons/sentiment_satisfied.svg" alt="Add emoji">
                         </button>
     
-                        <div class="emoji-picker" *ngIf="isPickerVisible" (click)="$event.stopPropagation()">
+                        <div class="emoji-picker" *ngIf="isPickerVisible && pickerContext === 'input'">
                             <emoji-mart (emojiClick)="addEmoji($event)"></emoji-mart>
                         </div>
                         <button mat-icon-button (click)="addAtSymbol()">

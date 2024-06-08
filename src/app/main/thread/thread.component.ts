@@ -35,7 +35,7 @@ export class ThreadComponent implements OnInit, OnChanges {
 
   closeThread() {
     this.threadClose.emit(false);
-    if (window.matchMedia('(max-width: 431px)').matches) {
+    if (window.matchMedia('(max-width: 768px)').matches) {
       this.chatService.mobileOpen = 'chat';
     }
   }

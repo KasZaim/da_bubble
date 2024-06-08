@@ -118,13 +118,6 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
     console.log(this.imageService.storage);
   }
 
-  toggleThread() {
-    this.threadOpen.emit(!this.threadOpen);
-    if (window.matchMedia('(max-width: 768px)').matches) {
-      this.chatService.mobileOpen = 'thread';
-    }
-  }
-
   addEmoji(event: any) {
     if (this.pickerContext === 'input') {
       this.messageText += event.emoji.native;

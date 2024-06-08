@@ -209,6 +209,7 @@ export class ChatService {
   setComponent(componentName: string) {
     this.openComponent = componentName;
   }
+
   async addReaction( messageId: string,messageKey:any, emoji: string) {
     console.log(messageKey)
     const messageRef = doc(this.firestore.firestore, `channels/${this.currentChannelID}/messages/0001`);

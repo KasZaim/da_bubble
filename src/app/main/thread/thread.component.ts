@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { ChatService } from '../chat/chat.service';
 import { Message } from '../../interfaces/message';
 import { FormsModule } from '@angular/forms';
+import { CurrentuserService } from '../../currentuser.service';
 
 @Component({
   selector: 'app-thread',
@@ -21,7 +22,10 @@ export class ThreadComponent implements OnInit, OnChanges {
   messageText: string = '';
   isPickerVisible = false;
 
-  constructor(private chatService: ChatService) {}
+  constructor(
+    private chatService: ChatService,
+    public currentUser: CurrentuserService,
+  ) {}
 
   ngOnInit() {
     this.loadMessages();
@@ -88,5 +92,42 @@ export class ThreadComponent implements OnInit, OnChanges {
 
   objectKeysLength(obj: any | string): number {
     return Object.keys(obj).length;
+  }
+
+  isLater(newMessageTime: string | undefined, previousMessageTime: string | undefined): boolean {
+    if (!newMessageTime || !previousMessageTime) {
+      return false;
+    }
+
+    const previousMessageDate = new Date(previousMessageTime).setHours(0, 0, 0, 0);
+    const newMessageDate = new Date(newMessageTime).setHours(0, 0, 0, 0);
+
+    return newMessageDate > previousMessageDate;
+  }
+
+  dayDate(timestamp: string): string {
+    const date = new Date(timestamp);
+    const today = new Date();
+
+    today.setHours(0, 0, 0, 0);
+    const dateToCompare = new Date(date).setHours(0, 0, 0, 0);
+
+    const yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
+
+    if (dateToCompare === today.getTime()) {
+      return "Heute";
+    } else if (dateToCompare === yesterday.getTime()) {
+      return "Gestern";
+    }
+
+    const options: Intl.DateTimeFormatOptions = { weekday: 'long', day: 'numeric', month: 'long' };
+    return date.toLocaleDateString('de-DE', options);
+  }
+
+  dayTime(timestamp: string): string {
+    const date = new Date(timestamp);
+    const options: Intl.DateTimeFormatOptions = { hour: '2-digit', minute: '2-digit', hour12: false };
+    return date.toLocaleTimeString('de-DE', options);
   }
 }

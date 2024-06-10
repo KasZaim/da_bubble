@@ -1,19 +1,26 @@
 <main>
-    <header>
+  <header>
+    <div>
+      <h1>Thread</h1>
       <div>
-        <h1>Thread</h1>
-        <div>
-          <img src="../../../assets/img/icons/tag-purple.svg">
-          <span>Entwicklerteam</span>
-        </div>
+        <img src="../../../assets/img/icons/tag-purple.svg">
+        <span>Entwicklerteam</span>
       </div>
-      <button class="closeButton" (click)="closeThread()" mat-icon-button>
-        <img src="../../../assets/img/icons/close.svg">
-      </button>
-    </header>
-    <div class="chat-body">
-      <div class="chat">
-        <div *ngFor="let message of messages">
+    </div>
+    <button class="closeButton" (click)="closeThread()" mat-icon-button>
+      <img src="../../../assets/img/icons/close.svg">
+    </button>
+  </header>
+  <div class="chat-body">
+    <div class="chat">
+      <div *ngFor="let message of messages; let i = index">
+        <div *ngIf="i === 0 || isLater(message.time, messages[i-1]?.time)">
+          <div class="day-date">
+            <h2>{{ dayDate(message.time) }}</h2>
+            <div class="vector"></div>
+          </div>
+        </div>
+        <div class="message" [ngClass]="{'my-message': message.id === currentUser.currentUser.id}">
           <img *ngIf="message.avatar.length > 1; else defaultAvatar" [src]="message.avatar">
           <ng-template #defaultAvatar>
             <img src="../../../assets/img/avatar/{{ message.avatar }}.svg">
@@ -21,7 +28,7 @@
           <div>
             <div class="message-info">
               <h5>{{ message.name }}</h5>
-              <span>{{ message.time }}</span>
+              <span>{{ dayTime(message.time) }} Uhr</span>
             </div>
             <div class="message-text">{{ message.message }}</div>
             <div>
@@ -40,25 +47,26 @@
           </div>
         </div>
       </div>
-      <div class="input-container">
-        <div class="chat-input">
-          <textarea type="text" (keydown)="onKeydown($event)" [(ngModel)]="messageText" placeholder="Antworten..."></textarea>
-          <div class="action-buttons">
-            <div class="button-wrapper">
-              <button mat-icon-button>
-                <img src="../../../assets/img/icons/add-gray.svg" alt="Add image">
-              </button>
-              <div class="vector"></div>
-              <button mat-icon-button>
-                <img src="../../../assets/img/icons/alternate_email.svg" alt="Tag someone">
-              </button>
-            </div>
-            <button mat-icon-button (click)="send()">
-              <img src="../../../assets/img/icons/send-button.svg" alt="Send message">
+    </div>
+    <div class="input-container">
+      <div class="chat-input">
+        <textarea type="text" (keydown)="onKeydown($event)" [(ngModel)]="messageText" placeholder="Antworten..."></textarea>
+        <div class="action-buttons">
+          <div class="button-wrapper">
+            <button mat-icon-button>
+              <img src="../../../assets/img/icons/add-gray.svg" alt="Add image">
+            </button>
+            <div class="vector"></div>
+            <button mat-icon-button>
+              <img src="../../../assets/img/icons/alternate_email.svg" alt="Tag someone">
             </button>
           </div>
+          <button mat-icon-button (click)="send()">
+            <img src="../../../assets/img/icons/send-button.svg" alt="Send message">
+          </button>
         </div>
       </div>
-      <!-- TODO: add focus textarea on click -->
     </div>
-  </main>
+    <!-- TODO: add focus textarea on click -->
+  </div>
+</main>

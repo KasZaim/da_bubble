@@ -90,7 +90,7 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
       this.chatService.mobileOpen = 'thread';
     }
   }
-  
+
   onMessageClick(event: MouseEvent) {
     const target = event.target as HTMLElement;
     if (target.classList.contains('highlight-mention')) {
@@ -289,25 +289,24 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
     }
   }
 
-  padNumber(num: number, size: number) {
+  padNumber(num: number, size: number): string {
     let s = num + '';
     while (s.length < size) s = '0' + s;
     return s;
-  }
+}
 
-  isLater(newMessageTime: string, index: number): boolean {
-    const previousMessage = this.chatService.currentChannel.messages?.get(this.padNumber(index, 4));
 
-    if (!previousMessage) {
-      return false;
+  isLater(newMessageTime: string | undefined, previousMessageTime: string | undefined): boolean {
+    if (!newMessageTime || !previousMessageTime) {
+        return false;
     }
 
-    const previousMessageTime = previousMessage.time;
     const previousMessageDate = new Date(previousMessageTime).setHours(0, 0, 0, 0);
     const newMessageDate = new Date(newMessageTime).setHours(0, 0, 0, 0);
 
     return newMessageDate > previousMessageDate;
-  }
+}
+
 
   dayDate(timestamp: string): string {
     const date = new Date(timestamp);

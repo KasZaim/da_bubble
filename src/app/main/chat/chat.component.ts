@@ -1,10 +1,10 @@
-import { Component, ElementRef, EventEmitter, Input, Output, ViewChild, AfterViewInit, AfterViewChecked } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Output, ViewChild, AfterViewInit, AfterViewChecked } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { DialogAddMemberToChnlComponent } from '../../dialog-add-member-to-chnl/dialog-add-member-to-chnl.component';
-import { MatMenu, MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
+import { MatMenu, MatMenuModule } from '@angular/material/menu';
 import { DialogChannelInfoComponent } from '../../dialog-channel-info/dialog-channel-info.component';
 import { DialogShowChannelMemberComponent } from '../../dialog-show-channel-member/dialog-show-channel-member.component';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
@@ -129,14 +129,14 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
   togglePicker(context: string, messageKey : any, messageId: string) {
     this.isPickerVisible = !this.isPickerVisible;
     this.pickerContext = context;
-    if (context === 'reactions') {
+    if (context === 'reaction') {
       this.currentMessageId = messageId;
       this.currentMessageKey = messageKey;
     }
   }
 
-  addReactionToMessage( messageId: string,messageKey:any, emoji: string) {
-    this.chatService.addReaction(messageId,messageKey, emoji)
+  addReactionToMessage(messageId: string, messageKey:any, emoji: string) {
+    this.chatService.addReaction(messageId, messageKey, emoji)
       .then(() => console.log('Reaction added'))
       .catch(error => console.error('Error adding reaction: ', error));
   }
@@ -289,24 +289,25 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
     }
   }
 
-  padNumber(num: number, size: number): string {
+  padNumber(num: number, size: number) {
     let s = num + '';
     while (s.length < size) s = '0' + s;
     return s;
-}
+  }
 
+  isLater(newMessageTime: string, index: number): boolean {
+    const previousMessage = this.chatService.currentChannel.messages?.get(this.padNumber(index, 4));
 
-  isLater(newMessageTime: string | undefined, previousMessageTime: string | undefined): boolean {
-    if (!newMessageTime || !previousMessageTime) {
-        return false;
+    if (!previousMessage) {
+      return false;
     }
 
+    const previousMessageTime = previousMessage.time;
     const previousMessageDate = new Date(previousMessageTime).setHours(0, 0, 0, 0);
     const newMessageDate = new Date(newMessageTime).setHours(0, 0, 0, 0);
 
     return newMessageDate > previousMessageDate;
-}
-
+  }
 
   dayDate(timestamp: string): string {
     const date = new Date(timestamp);

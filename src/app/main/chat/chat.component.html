@@ -25,68 +25,80 @@
     </div>
     <div class="chat-content">
         @if (!emptyChannel()) {
-            <div class="chat-content">
-                <div class="chat" #chatContainer>
-                    <div *ngFor="let message of chatService.currentChannel.messages | keyvalue; let i = index">
-                        <div *ngIf="i === 0 || isLater(message.value.time, chatService.currentChannel.messages.get(padNumber(i - 1, 4))?.time)">
-                            <div class="day-date">
-                                <h2>{{ dayDate(message.value.time) }}</h2>
-                                <div class="vector"></div>
-                            </div>
-                        </div>
-                        <div class="message" [ngClass]="{'my-message': message.value.id === currentUser.currentUser.id}">
-                            <div class="hoverMenu">
-                                <button mat-icon-button>
-                                    <img src="../../../assets/img/icons/emoji-check.svg" alt="React">
-                                </button>
-                                <button mat-icon-button>
-                                    <img src="../../../assets/img/icons/emoji-hands-up.svg" alt="React">
-                                </button>
-                                <button (click)="toggleThread(chatService.currentChannelID, message.key)" mat-icon-button>
-                                    <img src="../../../assets/img/icons/comment.svg" alt="Comment">
-                                </button>
-                                <button mat-icon-button class="moreButton" [matMenuTriggerFor]="menu">
-                                    <img src="../../../assets/img/icons/3-dots.svg" alt="More">
-                                </button>
-                                <mat-menu class="moreMenu" #menu="matMenu">
-                                    <button mat-menu-item (click)="openDialogEditMessage(chatService.currentChannelID)">
-                                        Nachricht bearbeiten
-                                    </button>
-                                </mat-menu>
-                            </div>
-            
-                            <img *ngIf="message.value.avatar.length > 1; else defaultAvatar" [src]="message.value.avatar">
-                            <ng-template #defaultAvatar>
-                                <img src="../../../assets/img/avatar/{{ message.value.avatar }}.svg">
-                            </ng-template>
-                            <div>
-                                <div class="message-info">
-                                    <h5>{{ message.value.name }}</h5>
-                                    <span>{{ dayTime(message.value.time) }} Uhr</span>
-                                </div>
-                                <div #message class="message-text" (click)="onMessageClick($event)" [innerHTML]="message.value.message | highlightMentions">
-                                </div>
-                                <div>
-                                    <div class="reaction">
-                                        <ng-container *ngIf="objectKeysLength(message.value.reactions || {}) > 0">
-                                            <ng-container *ngFor="let reaction of objectKeys(message.value.reactions || {}); let i = index">
-                                                <button mat-raised-button>
-                                                    <img src="../../../assets/img/icons/emoji-{{ objectKeys(message.value.reactions || {})[i] }}.svg">
-                                                    <span>{{ objectValues(message.value.reactions || {})[i] }}</span>
-                                                </button>
-                                            </ng-container>
-                                        </ng-container>
-                                        <img src="../../../assets/img/icons/add_reaction.svg" alt="Add reaction" (click)="togglePicker('reaction', message.key, message.value.id); $event.stopPropagation()">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+        <div class="chat" #chatContainer>
+            <!-- TODO: Add answers to thread amount -->
+            @for (message of chatService.currentChannel.messages | keyvalue; track message; let i = $index) {
+                @if (i == 0 || isLater(message.value.time, i - 1)) {
+                    <div class="day-date">
+                        <h2>{{ dayDate(message.value.time) }}</h2>
+                        <div class="vector"></div>
                     </div>
-                    <div class="emoji-picker" *ngIf="isPickerVisible && pickerContext === 'reaction'">
-                        <emoji-mart (emojiClick)="addEmoji($event)"></emoji-mart>
+                }
+                <div *ngFor="let message of chatService.currentChannel.messages | keyvalue; let i = index" class="message" [ngClass]="{'my-message': message.value.id === currentUser.currentUser.id}">
+                    <div class="hoverMenu">
+                        <button mat-icon-button>
+                            <img src="../../../assets/img/icons/emoji-check.svg" alt="React">
+                        </button>
+                        <button mat-icon-button>
+                            <img src="../../../assets/img/icons/emoji-hands-up.svg" alt="React">
+                        </button>
+                        <button (click)="toggleThread(chatService.currentChannelID, message.key)" mat-icon-button>
+                            <img src="../../../assets/img/icons/comment.svg" alt="Comment">
+                          </button>
+                        <button mat-icon-button class="moreButton" [matMenuTriggerFor]="menu">
+                            <img src="../../../assets/img/icons/3-dots.svg" alt="More">
+                        </button>
+                        <mat-menu class="moreMenu" #menu="matMenu">
+                            <button mat-menu-item (click)="openDialogEditMessage(chatService.currentChannelID)">
+                                Nachricht bearbeiten
+                            </button>
+                        </mat-menu>
+                    </div>
+    
+                    @if (message.value.avatar.length > 1) {
+                        <img src="{{ message.value.avatar }}">
+                    } @else {
+                        <img src="../../../assets/img/avatar/{{ message.value.avatar }}.svg">
+                    }
+                    <div>
+                        <div class="message-info">
+                            <h5>{{ message.value.name }}</h5>
+                            <span>{{ dayTime(message.value.time) }} Uhr</span>
+                        </div>
+                        <div #message class="message-text" (click)="onMessageClick($event)" [innerHTML]="message.value.message | highlightMentions">
+                            
+                        </div>
+                        <div>
+                            <div class="reaction">
+                                @if(message.value.reactions) {
+                                @for(reaction of message.value.reactions | keyvalue; track reaction; let i = $index) {
+                                <div class="reaction-wrapper">
+                                    <div class="reaction-tooltip">
+                                        <img src="../../../assets/img/icons/emoji-{{ reaction.key }}.svg">
+                                        <span>Name, Name</span>
+                                        <p>hat reagiert</p>
+                                    </div>
+                                    <button mat-raised-button>
+                                        <img src="../../../assets/img/icons/emoji-{{ reaction.key }}.svg">
+                                        <span>{{ reaction.value }}</span>
+                                    </button>
+                                </div>
+                                }
+                                }
+                                <img src="../../../assets/img/icons/add_reaction.svg" alt="Add reaction" (click)="togglePicker('reaction', message.key, message.value.id); $event.stopPropagation()">
+                                
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
+            }
+            <div class="emoji-picker" *ngIf="isPickerVisible && pickerContext === 'reaction'">
+                <emoji-mart (emojiClick)="addEmoji($event)"></emoji-mart>
+              </div>
+
+
+            <!-- TODO: add focus textarea on click -->
+        </div>
         } @else {
         <div class="blank-chat">
             <div class="blank-info">

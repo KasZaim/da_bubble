@@ -27,6 +27,7 @@ export class ChatService {
   selectedChannel = '';
   selectedDirectmessage = '';
   mobileOpen = '';
+  selectedPadnumber: string = '';  // Hier speichern wir die padnumber
   selectedUser: UsersList = {
     id: '',
     name: '',
@@ -147,7 +148,7 @@ export class ChatService {
     const messagesSnapshot = await getDocs(channelRef);
     const messageCount = messagesSnapshot.size;
     const newMessageRef = doc(channelRef, this.padNumber(messageCount, 4));
-
+    console.log(this.selectedPadnumber)
     const messageData: Message = {
       id: this.currentUser.currentUser.id,
       avatar: this.currentUser.currentUser.avatar,
@@ -155,9 +156,9 @@ export class ChatService {
       time: message.time,
       message: message.message,
       createdAt: serverTimestamp(),
-      reactions: {}
+      reactions: {},
+      padNumber: this.selectedPadnumber
     };
-    console.log(messageData);
     await setDoc(newMessageRef, messageData);
   }
 
@@ -174,7 +175,8 @@ export class ChatService {
       time: message.time,
       message: message.message,
       createdAt: serverTimestamp(),
-      reactions: {}
+      reactions: {},
+      padNumber: this.selectedPadnumber
     };
     console.log(messageData);
     await setDoc(newMessageRef, messageData);
@@ -183,6 +185,7 @@ export class ChatService {
   padNumber(num: number, size: number) {
     let s = num + '';
     while (s.length < size) s = '0' + s;
+    this.selectedPadnumber = s;
     return s;
   }
 
@@ -210,18 +213,18 @@ export class ChatService {
     this.openComponent = componentName;
   }
 
-  async addReaction( messageId: string,messageKey:any, emoji: string) {
-    console.log(messageKey)
-    const messageRef = doc(this.firestore.firestore, `channels/${this.currentChannelID}/messages/0001`);
+
+  async addReaction( messagePadnr: string, emoji: string) {
+    const threadMessagesRef = collection(this.firestore.firestore, `channels/${this.currentChannelID}/messages`);
+    const messageRef = doc(threadMessagesRef, messagePadnr);
     const messageSnapshot = await getDoc(messageRef);
     
     if (!messageSnapshot.exists()) {
-      console.error(`Message with ID ${messageId} not found`);
+      console.error(`Message with ID ${messagePadnr} not found`);
       return;
     }
   
     const messageData = messageSnapshot.data();
-    console.log(messageData)
     if (!messageData['reactions']) {
       messageData['reactions'] = {};
     }

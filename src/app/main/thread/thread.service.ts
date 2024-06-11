@@ -23,7 +23,8 @@ export class ThreadService {
       time: message.time,
       message: message.message,
       createdAt: serverTimestamp(),
-      reactions: message.reactions
+      reactions: message.reactions,
+      padNumber: ''
     };
     await setDoc(newMessageRef, messageData);
   }

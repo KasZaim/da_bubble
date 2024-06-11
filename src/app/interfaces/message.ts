@@ -6,4 +6,5 @@ export interface Message {
     message: string,
     createdAt: any,
     reactions?: { [key: string]: number } //Map<string, number>
+    padNumber: number | string
 }

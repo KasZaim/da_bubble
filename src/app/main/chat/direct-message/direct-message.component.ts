@@ -89,7 +89,8 @@ export class DirectMessageComponent {
         time: new Date().toISOString(),
         message: this.messageText,
         createdAt: serverTimestamp(),
-        reactions: {}
+        reactions: {},
+        padNumber: ''
       };
 
       await this.DMSerivce.sendMessage(this.chatService.selectedUser.id, message);

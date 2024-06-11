@@ -59,7 +59,8 @@ export class ThreadComponent implements OnInit, OnChanges {
         time: new Date().toISOString(),
         message: this.messageText,
         createdAt: new Date(),
-        reactions: {}
+        reactions: {},
+        padNumber: ''
       };
       await this.chatService.sendThreadMessage(this.channelId, this.messageId, message);
       this.messageText = '';

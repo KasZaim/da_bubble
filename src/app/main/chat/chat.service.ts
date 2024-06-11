@@ -213,26 +213,18 @@ export class ChatService {
     this.openComponent = componentName;
   }
 
-  async getSingleMessages( messageId: string,messageKey:any, emoji: string){
+
+  async addReaction( messagePadnr: string, emoji: string) {
     const threadMessagesRef = collection(this.firestore.firestore, `channels/${this.currentChannelID}/messages`);
-    const messageRef = doc(threadMessagesRef, '0027');
-    const messageSnapshot = await getDoc(messageRef);
-
-    
-  }
-
-
-  async addReaction( messageId: string,messageKey:any, emoji: string) {
-    const messageRef = doc(this.firestore.firestore, `channels/${this.currentChannelID}/messages/0001`);
+    const messageRef = doc(threadMessagesRef, messagePadnr);
     const messageSnapshot = await getDoc(messageRef);
     
     if (!messageSnapshot.exists()) {
-      console.error(`Message with ID ${messageId} not found`);
+      console.error(`Message with ID ${messagePadnr} not found`);
       return;
     }
   
     const messageData = messageSnapshot.data();
-    console.log(messageData)
     if (!messageData['reactions']) {
       messageData['reactions'] = {};
     }

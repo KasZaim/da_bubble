@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Output, ViewChild, AfterViewInit, AfterViewChecked } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Output, ViewChild, AfterViewInit, AfterViewChecked, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -24,7 +24,7 @@ import { MatInputModule } from '@angular/material/input';
 import { HighlightMentionsPipe } from '../../pipes/highlist-mentions.pipe';
 import { PofileInfoCardComponent } from '../../pofile-info-card/pofile-info-card.component';
 import { ImageService } from '../../image.service';
-
+import { EmojiModule  } from '@ctrl/ngx-emoji-mart/ngx-emoji';
 @Component({
   selector: 'app-chat',
   standalone: true,
@@ -42,9 +42,11 @@ import { ImageService } from '../../image.service';
     MatInputModule,
     ReactiveFormsModule,
     HighlightMentionsPipe,
-    PofileInfoCardComponent
+    PofileInfoCardComponent,
+    EmojiModule 
   ],
   templateUrl: './chat.component.html',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   styleUrls: ['./chat.component.scss']
 })
 export class ChatComponent implements AfterViewInit, AfterViewChecked {
@@ -53,8 +55,7 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
   messageText: string = '';
   isPickerVisible = false;
   pickerContext: string = '';
-  currentMessageId: string = '';
-  currentMessageKey: string = ''; 
+  currentMessagePadnumber: string = '';
   formCtrl = new FormControl();
   filteredMembers: Observable<UsersList[]>;
   showUserlist = false;
@@ -83,6 +84,7 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
   ngAfterViewChecked() {
     this.scrollToBottom();
   }
+  
 
   toggleThread(channelId: string, messageId: string) {
     this.threadOpen.emit({ channelId, messageId });
@@ -117,26 +119,24 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
   log() {
     console.log(this.imageService.storage);
   }
+  
 
   addEmoji(event: any) {
     if (this.pickerContext === 'input') {
       this.messageText += event.emoji.native;
     } else if(this.pickerContext === 'reaction') {
-      this.addReactionToMessage(this.currentMessageId,this.currentMessageKey,event.emoji.native);
+      this.addReactionToMessage(this.currentMessagePadnumber,event.emoji.native);
     }
   }
 
-  togglePicker(context: string, messageKey : any, messageId: string) {
+  togglePicker(context: string, padNr : any) {
     this.isPickerVisible = !this.isPickerVisible;
     this.pickerContext = context;
-    if (context === 'reactions') {
-      this.currentMessageId = messageId;
-      this.currentMessageKey = messageKey;
-    }
+    this.currentMessagePadnumber = padNr;
   }
 
-  addReactionToMessage( messageId: string,messageKey:any, emoji: string) {
-    this.chatService.getSingleMessages(messageId,messageKey, emoji)
+  addReactionToMessage( messagePadnr: string, emoji: string) {
+    this.chatService.addReaction(messagePadnr, emoji)
       .then(() => console.log('Reaction added'))
       .catch(error => console.error('Error adding reaction: ', error));
   }
@@ -146,9 +146,7 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
     if (this.isPickerVisible) {
       this.isPickerVisible = false;
       this.pickerContext = '';
-      this.currentMessageId = '';
-      this.pickerContext = '';
-      this.currentMessageId = '';
+      this.currentMessagePadnumber = ''
     }
   }
 

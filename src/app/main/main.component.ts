@@ -1,14 +1,14 @@
-import { Component, ElementRef, Input, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
+import { MatDrawer } from '@angular/material/sidenav';
 import { ConversationsComponent } from './conversations/conversations.component';
 import { HeaderComponent } from './header/header.component';
-import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
+import { MatSidenavModule } from '@angular/material/sidenav';
 import { NgClass } from '@angular/common';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { ThreadComponent } from './thread/thread.component';
 import { ChatComponent } from './chat/chat.component';
 import { WelcomeScreenComponent } from './welcome-screen/welcome-screen.component';
 import { DirectMessageComponent } from './chat/direct-message/direct-message.component';
-import { UsersList } from '../../app/interfaces/users-list';
 import { NewMessageComponent } from './new-message/new-message.component';
 import { ChatService } from './chat/chat.service';
 import { MatButtonModule } from '@angular/material/button';
@@ -32,31 +32,31 @@ import { MatButtonModule } from '@angular/material/button';
     NgClass
   ],
   templateUrl: './main.component.html',
-  styleUrl: './main.component.scss'
+  styleUrls: ['./main.component.scss']
 })
 export class MainComponent {
   threadOpen = false;
   showMenu = false;
-  @ViewChild('threadDrawer') public threadDrawer!: MatSidenav;
+  selectedMessageId!: string;
 
-  constructor(public chatService: ChatService) {
-    
-  }
+  @ViewChild('threadDrawer') public threadDrawer!: MatDrawer;
+
+  constructor(public chatService: ChatService) {}
 
   mobileGoBack() {
     this.chatService.mobileOpen = '';
   }
 
-  openMobileComponent(string: string) {
-    this.chatService.mobileOpen = string;
+  openMobileComponent(component: string) {
+    this.chatService.mobileOpen = component;
   }
 
-  openComponent(componentName: string,) {
+  openComponent(componentName: string) {
     this.chatService.setComponent(componentName);
-
   }
 
-  openThread() {
+  openThread(event: { channelId: string, messageId: string }) {
+    this.selectedMessageId = event.messageId;
     this.threadDrawer.open();
   }
 

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FirestoreService } from '../../firestore.service';
 import { collection, doc, onSnapshot, orderBy, query, setDoc, getDocs, serverTimestamp, getDoc, updateDoc } from '@angular/fire/firestore';
+import { collection, doc, onSnapshot, orderBy, query, setDoc, getDocs, serverTimestamp, getDoc, updateDoc } from '@angular/fire/firestore';
 import { Channel } from '../../interfaces/channel';
 import { Message } from '../../interfaces/message';
 import { CurrentuserService } from '../../currentuser.service';

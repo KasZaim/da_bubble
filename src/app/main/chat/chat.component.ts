@@ -55,9 +55,6 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
   pickerContext: string = '';
   currentMessageId: string = '';
   currentMessageKey: string = ''; 
-  pickerContext: string = '';
-  currentMessageId: string = '';
-  currentMessageKey: string = ''; 
   formCtrl = new FormControl();
   filteredMembers: Observable<UsersList[]>;
   showUserlist = false;
@@ -139,7 +136,7 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
   }
 
   addReactionToMessage( messageId: string,messageKey:any, emoji: string) {
-    this.chatService.addReaction(messageId,messageKey, emoji)
+    this.chatService.getSingleMessages(messageId,messageKey, emoji)
       .then(() => console.log('Reaction added'))
       .catch(error => console.error('Error adding reaction: ', error));
   }
@@ -263,7 +260,8 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
         time: new Date().toISOString(),
         message: this.messageText,
         createdAt: serverTimestamp(),
-        reactions: {}
+        reactions: {},
+        padNumber: ''
       };
 
       await this.chatService.sendMessage(this.chatService.currentChannelID, message);
@@ -303,7 +301,6 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
 
   isLater(newMessageTime: string, index: number): boolean {
     const previousMessage = this.chatService.currentChannel.messages?.get(this.padNumber(index, 4));
-
     if (!previousMessage) {
       return false;
     }

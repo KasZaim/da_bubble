@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FirestoreService } from '../../firestore.service';
 import { collection, doc, onSnapshot, orderBy, query, setDoc, getDocs, serverTimestamp, getDoc, updateDoc } from '@angular/fire/firestore';
-import { collection, doc, onSnapshot, orderBy, query, setDoc, getDocs, serverTimestamp, getDoc, updateDoc } from '@angular/fire/firestore';
 import { Channel } from '../../interfaces/channel';
 import { Message } from '../../interfaces/message';
 import { CurrentuserService } from '../../currentuser.service';
@@ -28,6 +27,7 @@ export class ChatService {
   selectedChannel = '';
   selectedDirectmessage = '';
   mobileOpen = '';
+  selectedPadnumber: string = '';  // Hier speichern wir die padnumber
   selectedUser: UsersList = {
     id: '',
     name: '',
@@ -148,7 +148,7 @@ export class ChatService {
     const messagesSnapshot = await getDocs(channelRef);
     const messageCount = messagesSnapshot.size;
     const newMessageRef = doc(channelRef, this.padNumber(messageCount, 4));
-
+    console.log(this.selectedPadnumber)
     const messageData: Message = {
       id: this.currentUser.currentUser.id,
       avatar: this.currentUser.currentUser.avatar,
@@ -156,9 +156,9 @@ export class ChatService {
       time: message.time,
       message: message.message,
       createdAt: serverTimestamp(),
-      reactions: {}
+      reactions: {},
+      padNumber: this.selectedPadnumber
     };
-    console.log(messageData);
     await setDoc(newMessageRef, messageData);
   }
 
@@ -175,7 +175,8 @@ export class ChatService {
       time: message.time,
       message: message.message,
       createdAt: serverTimestamp(),
-      reactions: {}
+      reactions: {},
+      padNumber: this.selectedPadnumber
     };
     console.log(messageData);
     await setDoc(newMessageRef, messageData);
@@ -184,6 +185,7 @@ export class ChatService {
   padNumber(num: number, size: number) {
     let s = num + '';
     while (s.length < size) s = '0' + s;
+    this.selectedPadnumber = s;
     return s;
   }
 
@@ -210,8 +212,17 @@ export class ChatService {
   setComponent(componentName: string) {
     this.openComponent = componentName;
   }
+
+  async getSingleMessages( messageId: string,messageKey:any, emoji: string){
+    const threadMessagesRef = collection(this.firestore.firestore, `channels/${this.currentChannelID}/messages`);
+    const messageRef = doc(threadMessagesRef, '0027');
+    const messageSnapshot = await getDoc(messageRef);
+
+    
+  }
+
+
   async addReaction( messageId: string,messageKey:any, emoji: string) {
-    console.log(messageKey)
     const messageRef = doc(this.firestore.firestore, `channels/${this.currentChannelID}/messages/0001`);
     const messageSnapshot = await getDoc(messageRef);
     

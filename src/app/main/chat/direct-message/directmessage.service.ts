@@ -35,7 +35,8 @@ export class DirectmessageService {
       time: message.time,
       message: message.message,
       createdAt: serverTimestamp(),
-      reactions: {}
+      reactions: {},
+      padNumber: ''
     };
     try {
       await setDoc(newMessageRef, newMessage, { merge: true });

@@ -206,6 +206,16 @@
         gap: 0.5rem;
     }
 }
+.current-user-message{
+    align-self: flex-end;
+    display: flex;
+    flex-direction: row-reverse;
+}
+.current-user-text{
+    background-color: #797EF3 !important;
+    color: white;
+    border-radius: 1.875rem 0rem 1.875rem 1.875rem !important;
+}
 
 .message-info {
     display: flex;

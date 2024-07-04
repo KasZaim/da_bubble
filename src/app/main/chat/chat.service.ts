@@ -268,20 +268,22 @@ export class ChatService {
 
         const messageData = messageSnapshot.data();
         if (!messageData["reactions"]) {
-            messageData["reactions"] = new Map();
+            messageData["reactions"] = {};
         }
 
         if (!messageData["reactions"][emoji]) {
-            messageData["reactions"][emoji] = 0;
+            messageData["reactions"][emoji] = {
+                count: 0,
+                users: []
+            };
         }
 
-        messageData["reactions"][emoji]++;
-        messageData['btnReactions'].push(this.currentUser.currentUser.name);
+        messageData["reactions"][emoji].count++;
+        messageData["reactions"][emoji].users.push(this.currentUser.currentUser.name);
         await updateDoc(messageRef, { reactions: messageData["reactions"] });
-        await updateDoc(messageRef, { btnReactions: messageData["btnReactions"] });
     }
 
-    public async addOrSubReaction(message: any, reaction: any) {
+    async addOrSubReaction(message: any, reaction: string) {
         const threadMessagesRef = collection(
             this.firestore.firestore,
             `channels/${this.currentChannelID}/messages`,
@@ -293,20 +295,39 @@ export class ChatService {
             return;
         }
         const messageData = messageSnapshot.data();
-        if (messageData['btnReactions'].indexOf(this.currentUser.currentUser.name) === -1){
-            messageData['btnReactions'].push(messageData['name'])
-            messageData['reactions'][reaction] ++;
-            await updateDoc(messageRef, {reactions: messageData['reactions']});
-            await updateDoc(messageRef, {btnReactions: messageData['btnReactions']});
-        } else {
-            const btnRectionsIndex = messageData['btnReactions'].indexOf(this.currentUser.currentUser.name);
-            messageData['btnReactions'].splice(btnRectionsIndex, 1);
-            messageData['reactions'][reaction] --;
-            if(messageData['reactions'][reaction] === 0) {
-                delete messageData['reactions'][reaction];
-                }
-            await updateDoc(messageRef, {reactions: messageData['reactions']});
-            await updateDoc(messageRef, {btnReactions: messageData['btnReactions']});
+        const currentUser = this.currentUser.currentUser.name;
+
+        // if (!messageData["reactions"]) {
+        //     messageData["reactions"] = {};
+        // }
+
+        // if (!messageData["reactions"][reaction]) {
+        //     messageData["reactions"][reaction] = {
+        //         count: 0,
+        //         users: []
+        //     };
+        // }
+        if (!messageData["reactions"]) {
+            messageData["reactions"] = {
+                count: 0,
+                users: []
+            };
         }
+
+        const reactionData = messageData["reactions"][reaction];
+        const userIndex = reactionData.users.indexOf(currentUser);
+
+        if (userIndex === -1) {
+            reactionData.users.push(currentUser);
+            reactionData.count++;
+        } 
+        else {
+            reactionData.users.splice(userIndex, 1);
+            reactionData.count--;
+            if (reactionData.count === 0) {
+                delete messageData["reactions"][reaction];
+            }
+        }
+        await updateDoc(messageRef, { reactions: messageData["reactions"] });
     }
 }

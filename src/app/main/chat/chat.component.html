@@ -130,7 +130,7 @@
                         }
                         <div>
                             <div class="message-info">
-                                <h5>{{ message.value.name }}</h5>
+                                <h5>{{ message.value.name}}</h5>
                                 <span
                                     >{{ dayTime(message.value.time) }} Uhr</span
                                 >
@@ -158,15 +158,24 @@
                                                         [emoji]="reaction.key"
                                                     ></ngx-emoji>
                                                     <span>{{reaction.key}}</span>
-                                                    <span>{{message.value.name}}</span>
-                                                    <p>hat reagiert</p>
+                                                    
+                                                    @for (user of reaction.value.users; track $index) {
+                                                        <p>{{user}}@if (reaction.value.users.length > 1) {
+                                                            ,
+                                                        }</p> 
+                                                    }
+                                                    @if (reaction.value.users.length > 1) {
+                                                            <span>haben reagiert</span>
+                                                        }@else {
+                                                            <span>hat reagiert</span>
+                                                        }   
                                                 </div>
                                                 <button mat-raised-button (click)="addOrSubReaction(message, reaction.key)">                                                    <ngx-emoji
                                                     [emoji]="reaction.key"
                                                 ></ngx-emoji>
                                                 <span>
                                                     {{reaction.key}}
-                                            {{reaction.value}}</span></button>
+                                            {{reaction.value.count}}</span></button>
                                             </div>
                                         }
                                     }

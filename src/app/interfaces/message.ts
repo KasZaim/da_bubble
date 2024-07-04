@@ -1,3 +1,8 @@
+export interface Reaction {
+    count: number;
+    users: string[];
+}
+
 export interface Message {
     id: string;
     avatar: string;
@@ -5,7 +10,8 @@ export interface Message {
     time: string;
     message: string;
     createdAt: any;
-    reactions?: { [key: string]: number }; //Map<string, number>
+    reactions?: { [key: string]: Reaction }; // Map<string, Reaction>
     padNumber: number | string;
     btnReactions: string[];
 }
+

@@ -12,6 +12,7 @@ export interface Message {
     createdAt: any;
     reactions?: { [key: string]: Reaction }; // Map<string, Reaction>
     padNumber: number | string;
-    btnReactions: string[];
+    btnReactions: string[],
+    imageUrl: string;
 }
 

@@ -37,7 +37,8 @@ import { HighlightMentionsPipe } from "../../pipes/highlist-mentions.pipe";
 import { PofileInfoCardComponent } from "../../pofile-info-card/pofile-info-card.component";
 import { EmojiModule } from "@ctrl/ngx-emoji-mart/ngx-emoji";
 import { ImageService } from "../../image.service";
-import { ImageUploadComponent } from "../../image-upload/image-upload.component";
+
+
 @Component({
     selector: "app-chat",
     standalone: true,
@@ -57,7 +58,6 @@ import { ImageUploadComponent } from "../../image-upload/image-upload.component"
         HighlightMentionsPipe,
         PofileInfoCardComponent,
         EmojiModule,
-        ImageUploadComponent
         
     ],
     templateUrl: "./chat.component.html",
@@ -84,7 +84,9 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
     public currentChannel!: Channel;
     currentInputValue: string = "";
     previewUrl: string | ArrayBuffer | null = null;
-    
+    showModal: boolean = false;
+    showImageModal: "preview" | "chatImage"| string = '';
+    modalSrc: string | ArrayBuffer = '';
     constructor(
         public dialog: MatDialog,
         public chatService: ChatService,
@@ -273,6 +275,15 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
     }
 
     async send() {
+        let imageUrl = '';
+
+        if (this.previewUrl) {
+          const fileInput = document.getElementById('fileUpload') as HTMLInputElement;
+          imageUrl = await this.imageService.uploadFile(fileInput);
+          console.log(imageUrl)
+          this.clearPreview();
+          
+        }
         if (this.messageText.trim() !== "") {
             const message: Message = {
                 id: "",
@@ -283,7 +294,8 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
                 createdAt: serverTimestamp(),
                 reactions: {},
                 padNumber: "",
-                btnReactions: []
+                btnReactions: [],
+                imageUrl: imageUrl
             };
 
             await this.chatService.sendMessage(
@@ -438,10 +450,24 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
           };
           reader.readAsDataURL(file);
         }
+        
       }
     
       uploadFile(input: HTMLInputElement) {
         this.imageService.uploadFile(input);
+      }
+
+      clearPreview() {
+        this.previewUrl = null;
+      }
+
+      openModal(modalURL: string | ArrayBuffer) {
+        this.modalSrc = modalURL;
+        this.showModal = true;
+      }
+    
+      closeModal() {
+        this.showModal = false;
       }
 
 }

@@ -91,6 +91,11 @@
                     <div #message class="message-text" [ngClass]="{'current-user-text': message.value.name === currentUser.currentUser.name}"  (click)="onMessageClick($event)"
                         [innerHTML]="message.value.message | highlightMentions"  ></div>
 
+                    <div *ngIf="message.value.imageUrl"class="loaded-img" (click)="openModal(message.value.imageUrl)">
+                        <img [src]="message.value.imageUrl" alt="Image Preview" />
+                        
+                    </div>
+                    
                     <div>
                         <div class="reaction">
                             @if (message.value.reactions) {
@@ -163,14 +168,20 @@
             </div>
         </div>
         }
-        
+        <div *ngIf="showModal" class="modal">
+            <div class="modal-content">
+              <span class="close" (click)="closeModal()">&times;</span>
+              <img [src]="modalSrc" alt="Expanded Image Preview">
+            </div>
+        </div>
         <div class="input-container">
             <div class="chat-input">
                 <textarea #messageInput matInput (input)="onInputChange($event)" [formControl]="formCtrl"
                     [matAutocomplete]="auto" type="text" (keydown)="onKeydown($event)" [(ngModel)]="messageText"
                     placeholder="Nachricht an #{{chatService.currentChannel.name}}"></textarea>
                     
-                    <div *ngIf="previewUrl"class="loaded-img">
+                    <div *ngIf="previewUrl"class="loaded-img" (click)="openModal(previewUrl)">
+                        <img class="delete-preview" (click)="clearPreview()" src="../../../assets/img/icons/close-purple.svg" alt="close-loaded-img">
                         <img [src]="previewUrl" alt="Image Preview" />
                     </div>
 
@@ -196,7 +207,7 @@
                             <img src="../../../assets/img/icons/alternate_email.svg" alt="Tag someone" />
                         </button>
                     </div>
-                    <button (click)="send()" mat-icon-button>
+                    <button (click)="send()" (click)="uploadFile(upload)" mat-icon-button>
                         <img src="../../../assets/img/icons/send-button.svg" alt="Send message" />
                     </button>
                 </div>

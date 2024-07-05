@@ -91,7 +91,8 @@ export class DirectMessageComponent {
                 createdAt: serverTimestamp(),
                 reactions: {},
                 padNumber: "",
-                btnReactions: []
+                btnReactions: [],
+                imageUrl: ''
             };
 
             await this.DMSerivce.sendMessage(

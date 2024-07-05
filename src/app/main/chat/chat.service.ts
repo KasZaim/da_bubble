@@ -187,7 +187,8 @@ export class ChatService {
             createdAt: serverTimestamp(),
             reactions: {},
             padNumber: this.selectedPadnumber,
-            btnReactions: []
+            btnReactions: [],
+            imageUrl: message.imageUrl
         };
         await setDoc(newMessageRef, messageData);
     }
@@ -214,7 +215,8 @@ export class ChatService {
             createdAt: serverTimestamp(),
             reactions: {},
             padNumber: this.selectedPadnumber,
-            btnReactions: []
+            btnReactions: [],
+            imageUrl: message.imageUrl
         };
         console.log(messageData);
         await setDoc(newMessageRef, messageData);

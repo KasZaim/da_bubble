@@ -56,7 +56,7 @@ export class DirectMessageComponent {
     }
 
     log() {
-        console.log(this.imageService.storage);
+        console.log();
     }
     togglePicker() {
         this.isPickerVisible = !this.isPickerVisible;
@@ -91,7 +91,8 @@ export class DirectMessageComponent {
                 createdAt: serverTimestamp(),
                 reactions: {},
                 padNumber: "",
-                btnReactions: []
+                btnReactions: [],
+                imageUrl: ''
             };
 
             await this.DMSerivce.sendMessage(

@@ -469,7 +469,128 @@
             height: 2.5rem;
         }
     }
+    
 }
+.message-image{
+    max-width: 8rem;
+    border-radius: 10px;
+    border: 1px rgba(0, 0, 0, 0.2) solid;
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    cursor: pointer;
+}
+.upload-image{
+    border: none;
+    border-radius: 100%;
+    transition: all 225ms all ease-in-out;
+    input[type="file"] {
+        position: absolute;
+        top: 0;
+        right: 0;
+        margin: 0;
+        padding: 0;
+        font-size: 20px;
+        cursor: pointer;
+        opacity: 0;
+    }
+
+    &:hover{
+        background-color: rgba(0, 0, 0, 0.2);
+    }
+    
+}
+
+.loaded-img{
+    max-width: 8rem;
+    border-radius: 10px;
+    border: 1px rgba(0, 0, 0, 0.2) solid;
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    cursor: pointer;
+
+    &::after{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.1); /* Transparente Farbe */
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    }
+
+    &:hover::after{
+        opacity: 1;
+    }
+
+    img:last-child{
+        width: 100%;
+        height: auto; 
+    }
+    
+
+}
+
+.delete-preview{
+        position: absolute;
+        top: 0;
+        right: 0;
+        z-index: 10;
+        cursor: default;
+        border-radius: 100%;
+
+        &:hover{
+            background-color: rgba(45, 8, 225, 0.2);
+        }
+    }
+.modal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+  
+  .modal-content {
+    position: relative;
+    background-color: #fefefe;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 90%;
+    max-height: 90%;
+    overflow: auto;
+  }
+  
+  .modal-content img {
+    width: 100%;
+    height: auto;
+  }
+  
+  .close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .close:hover,
+  .close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+  }
 
 .input-container {
     padding: 0.5rem 1rem 1rem 1rem;

@@ -35,8 +35,10 @@ import { UsersList } from "../../interfaces/users-list";
 import { MatInputModule } from "@angular/material/input";
 import { HighlightMentionsPipe } from "../../pipes/highlist-mentions.pipe";
 import { PofileInfoCardComponent } from "../../pofile-info-card/pofile-info-card.component";
-import { ImageService } from "../../image.service";
 import { EmojiModule } from "@ctrl/ngx-emoji-mart/ngx-emoji";
+import { ImageService } from "../../image.service";
+
+
 @Component({
     selector: "app-chat",
     standalone: true,
@@ -56,6 +58,7 @@ import { EmojiModule } from "@ctrl/ngx-emoji-mart/ngx-emoji";
         HighlightMentionsPipe,
         PofileInfoCardComponent,
         EmojiModule,
+        
     ],
     templateUrl: "./chat.component.html",
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -67,6 +70,9 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
         messageId: string;
     }>();
     @ViewChild("chatContainer") private chatContainer!: ElementRef;
+    @ViewChild("messageInput") messageInput!: ElementRef<HTMLInputElement>;
+    @ViewChild("message") message!: ElementRef<HTMLInputElement>;
+
     messagesArrayLength: number |undefined;
     messageText: string = "";
     isPickerVisible = false;
@@ -77,15 +83,15 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
     showUserlist = false;
     public currentChannel!: Channel;
     currentInputValue: string = "";
-
-    @ViewChild("messageInput") messageInput!: ElementRef<HTMLInputElement>;
-    @ViewChild("message") message!: ElementRef<HTMLInputElement>;
-
+    previewUrl: string | ArrayBuffer | null = null;
+    showModal: boolean = false;
+    showImageModal: "preview" | "chatImage"| string = '';
+    modalSrc: string | ArrayBuffer = '';
     constructor(
         public dialog: MatDialog,
         public chatService: ChatService,
         public currentUser: CurrentuserService,
-        public imageService: ImageService,
+        public imageService: ImageService
     ) {
         this.filteredMembers = this.formCtrl.valueChanges.pipe(
             startWith(""),
@@ -269,6 +275,15 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
     }
 
     async send() {
+        let imageUrl = '';
+
+        if (this.previewUrl) {
+          const fileInput = document.getElementById('fileUpload') as HTMLInputElement;
+          imageUrl = await this.imageService.uploadFile(fileInput);
+          console.log(imageUrl)
+          this.clearPreview();
+          
+        }
         if (this.messageText.trim() !== "") {
             const message: Message = {
                 id: "",
@@ -279,7 +294,8 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
                 createdAt: serverTimestamp(),
                 reactions: {},
                 padNumber: "",
-                btnReactions: []
+                btnReactions: [],
+                imageUrl: imageUrl
             };
 
             await this.chatService.sendMessage(
@@ -423,5 +439,35 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
     addOrSubReaction(message: any, reaction: any) {
         this.chatService.addOrSubReaction(message, reaction)
     }
+
+    onFileSelected(event: Event) {
+        const input = event.target as HTMLInputElement;
+        if (input.files) {
+          const file = input.files[0];
+          const reader = new FileReader();
+          reader.onload = () => {
+            this.previewUrl = reader.result;
+          };
+          reader.readAsDataURL(file);
+        }
+        
+      }
+    
+      uploadFile(input: HTMLInputElement) {
+        this.imageService.uploadFile(input);
+      }
+
+      clearPreview() {
+        this.previewUrl = null;
+      }
+
+      openModal(modalURL: string | ArrayBuffer) {
+        this.modalSrc = modalURL;
+        this.showModal = true;
+      }
+    
+      closeModal() {
+        this.showModal = false;
+      }
 
 }

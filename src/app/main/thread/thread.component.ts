@@ -71,7 +71,8 @@ export class ThreadComponent implements OnInit, OnChanges {
                 createdAt: new Date(),
                 reactions: {},
                 padNumber: "",
-                btnReactions: []
+                btnReactions: [],
+                imageUrl: ''
             };
             await this.chatService.sendThreadMessage(
                 this.channelId,

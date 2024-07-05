@@ -49,7 +49,8 @@ export class DirectmessageService {
             createdAt: serverTimestamp(),
             reactions: {},
             padNumber: "",
-            btnReactions: []
+            btnReactions: [],
+            imageUrl: ''
         };
         try {
             await setDoc(newMessageRef, newMessage, { merge: true });

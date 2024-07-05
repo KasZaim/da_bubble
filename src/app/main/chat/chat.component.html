@@ -163,23 +163,29 @@
             </div>
         </div>
         }
+        
         <div class="input-container">
             <div class="chat-input">
                 <textarea #messageInput matInput (input)="onInputChange($event)" [formControl]="formCtrl"
                     [matAutocomplete]="auto" type="text" (keydown)="onKeydown($event)" [(ngModel)]="messageText"
-                    placeholder="Nachricht an #{{
-                        chatService.currentChannel.name
-                    }}"></textarea>
-                <div class="action-buttons">
-                    <div class="button-wrapper">
-                        <button mat-icon-button>
+                    placeholder="Nachricht an #{{chatService.currentChannel.name}}"></textarea>
+                    
+                    <div *ngIf="previewUrl"class="loaded-img">
+                        <img [src]="previewUrl" alt="Image Preview" />
+                    </div>
+
+                <div class="action-buttons" >
+                    <div class="button-wrapper" >
+                        <button class="upload-image">
+                            <input id="fileUpload" type="file" #upload (change)="onFileSelected($event)" accept=".png,.jpg"> 
                             <img src="../../../assets/img/icons/add-gray.svg" alt="Add image" />
                         </button>
+                        <!-- <button (click)="uploadFile(upload)">Upload</button> -->
+
                         <div class="vector"></div>
                         <button mat-icon-button (click)="
                                 togglePicker('input', '');
-                                $event.stopPropagation()
-                            ">
+                                $event.stopPropagation()">
                             <img src="../../../assets/img/icons/sentiment_satisfied.svg" alt="Add emoji" />
                         </button>
 

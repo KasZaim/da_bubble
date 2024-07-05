@@ -35,8 +35,9 @@ import { UsersList } from "../../interfaces/users-list";
 import { MatInputModule } from "@angular/material/input";
 import { HighlightMentionsPipe } from "../../pipes/highlist-mentions.pipe";
 import { PofileInfoCardComponent } from "../../pofile-info-card/pofile-info-card.component";
-import { ImageService } from "../../image.service";
 import { EmojiModule } from "@ctrl/ngx-emoji-mart/ngx-emoji";
+import { ImageService } from "../../image.service";
+import { ImageUploadComponent } from "../../image-upload/image-upload.component";
 @Component({
     selector: "app-chat",
     standalone: true,
@@ -56,6 +57,8 @@ import { EmojiModule } from "@ctrl/ngx-emoji-mart/ngx-emoji";
         HighlightMentionsPipe,
         PofileInfoCardComponent,
         EmojiModule,
+        ImageUploadComponent
+        
     ],
     templateUrl: "./chat.component.html",
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -67,6 +70,9 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
         messageId: string;
     }>();
     @ViewChild("chatContainer") private chatContainer!: ElementRef;
+    @ViewChild("messageInput") messageInput!: ElementRef<HTMLInputElement>;
+    @ViewChild("message") message!: ElementRef<HTMLInputElement>;
+
     messagesArrayLength: number |undefined;
     messageText: string = "";
     isPickerVisible = false;
@@ -77,15 +83,13 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
     showUserlist = false;
     public currentChannel!: Channel;
     currentInputValue: string = "";
-
-    @ViewChild("messageInput") messageInput!: ElementRef<HTMLInputElement>;
-    @ViewChild("message") message!: ElementRef<HTMLInputElement>;
-
+    previewUrl: string | ArrayBuffer | null = null;
+    
     constructor(
         public dialog: MatDialog,
         public chatService: ChatService,
         public currentUser: CurrentuserService,
-        public imageService: ImageService,
+        public imageService: ImageService
     ) {
         this.filteredMembers = this.formCtrl.valueChanges.pipe(
             startWith(""),
@@ -423,5 +427,21 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
     addOrSubReaction(message: any, reaction: any) {
         this.chatService.addOrSubReaction(message, reaction)
     }
+
+    onFileSelected(event: Event) {
+        const input = event.target as HTMLInputElement;
+        if (input.files) {
+          const file = input.files[0];
+          const reader = new FileReader();
+          reader.onload = () => {
+            this.previewUrl = reader.result;
+          };
+          reader.readAsDataURL(file);
+        }
+      }
+    
+      uploadFile(input: HTMLInputElement) {
+        this.imageService.uploadFile(input);
+      }
 
 }

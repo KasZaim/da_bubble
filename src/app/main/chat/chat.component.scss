@@ -469,6 +469,60 @@
             height: 2.5rem;
         }
     }
+    
+}
+.upload-image{
+    border: none;
+    border-radius: 100%;
+    transition: all 225ms all ease-in-out;
+    input[type="file"] {
+        position: absolute;
+        top: 0;
+        right: 0;
+        margin: 0;
+        padding: 0;
+        font-size: 20px;
+        cursor: pointer;
+        opacity: 0;
+    }
+
+    &:hover{
+        background-color: rgba(0, 0, 0, 0.2);
+    }
+    
+}
+
+.loaded-img{
+    max-width: 8rem;
+    border-radius: 10px;
+    border: 1px rgba(0, 0, 0, 0.2) solid;
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    cursor: pointer;
+
+    &::after{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.2); /* Transparente Farbe */
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    }
+
+    &:hover::after{
+        opacity: 1;
+    }
+
+    img{
+        width: 100%;
+        height: auto;
+        
+    }
+
 }
 
 .input-container {

@@ -56,7 +56,7 @@ export class DirectMessageComponent {
     }
 
     log() {
-        console.log(this.imageService.storage);
+        console.log();
     }
     togglePicker() {
         this.isPickerVisible = !this.isPickerVisible;

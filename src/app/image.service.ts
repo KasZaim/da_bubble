@@ -1,16 +1,24 @@
-import { Injectable } from "@angular/core";
-import { getStorage, ref, uploadBytes } from "firebase/storage";
+import { inject, Injectable, OnInit } from "@angular/core";
+import { Storage, ref, uploadBytesResumable } from '@angular/fire/storage';
 
 @Injectable({
     providedIn: "root",
 })
-export class ImageService {
-    storageBucket = "gs://dabubble-2a68b.appspot.com";
-    storage = getStorage();
-    imageRef = ref(this.storage, "image.jpg");
-    directoryRef = ref(this.storage, "images/image.jpg");
+export class ImageService  {
+    public storage = inject(Storage);
 
-    log() {
-        console.log(this.storage);
-    }
+    uploadFile(input: HTMLInputElement) {
+      if (!input.files) return
+  
+      const files: FileList = input.files;
+  
+      for (let i = 0; i < files.length; i++) {
+          const file = files.item(i);
+          if (file) {
+              const storageRef = ref(this.storage, file.name);
+              uploadBytesResumable(storageRef, file);
+          }
+      }
+  }
+
 }

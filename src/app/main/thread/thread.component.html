@@ -53,41 +53,37 @@
                         <div class="message-text">{{ message.message }}</div>
                         <div>
                             <div class="reaction">
-                                <ng-container
-                                    *ngIf="
-                                        objectKeysLength(
-                                            message.reactions || {}
-                                        ) > 0
-                                    "
-                                >
-                                    <ng-container
-                                        *ngFor="
-                                            let reaction of objectKeys(
-                                                message.reactions || {}
-                                            );
-                                            let i = index
-                                        "
-                                    >
-                                        <button mat-raised-button>
-                                            <img
-                                                src="../../../assets/img/icons/emoji-{{
-                                                    objectKeys(
-                                                        message.reactions || {}
-                                                    )[i]
-                                                }}.svg"
-                                            />
-                                            <span>{{
-                                                objectValues(
-                                                    message.reactions || {}
-                                                )[i]
-                                            }}</span>
-                                        </button>
-                                    </ng-container>
-                                </ng-container>
-                                <img
-                                    src="../../../assets/img/icons/add_reaction.svg"
-                                    alt="Add reaction"
-                                />
+                                @if (message.reactions) {
+                                @for (reaction of message.reactions| keyvalue;track reaction;let i = $index) {
+                                <div class="reaction-wrapper">
+                                    <div class="reaction-tooltip">
+                                        <ngx-emoji [emoji]="reaction.key"></ngx-emoji>
+                                        <span>{{reaction.key}}</span>
+    
+                                        @for (user of reaction.value.users; track $index) {
+                                        <p>{{user}}@if (reaction.value.users.length > 1) {
+                                            ,
+                                            }</p>
+                                        }
+                                        @if (reaction.value.users.length > 1) {
+                                        <span>haben reagiert</span>
+                                        }@else {
+                                        <span>hat reagiert</span>
+                                        }
+                                    </div>
+                                    <button mat-raised-button (click)="addOrSubReaction(message, reaction.key)"> <ngx-emoji
+                                            [emoji]="reaction.key"></ngx-emoji>
+                                        <span>
+                                            {{reaction.key}}
+                                            {{reaction.value.count}}</span></button>
+                                </div>
+                                }
+                                }
+                                <img src="../../../assets/img/icons/add_reaction.svg" alt="Add reaction" 
+                                (click)="togglePicker('reaction',message.padNumber); $event.stopPropagation()"/>
+                                <div class="emoji-picker" *ngIf="isPickerVisible && pickerContext === 'reaction'">
+                                    <emoji-mart (emojiClick)="addEmoji($event)"></emoji-mart>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -111,11 +107,14 @@
                             />
                         </button>
                         <div class="vector"></div>
+                        <button mat-icon-button (click)="togglePicker('input', '');$event.stopPropagation()">
+                            <img src="../../../assets/img/icons/sentiment_satisfied.svg" alt="Add emoji" />
+                        </button>
+                        <div class="emoji-picker" *ngIf="isPickerVisible && pickerContext === 'input'">
+                            <emoji-mart (emojiClick)="addEmoji($event)"></emoji-mart>
+                        </div>
                         <button mat-icon-button>
-                            <img
-                                src="../../../assets/img/icons/alternate_email.svg"
-                                alt="Tag someone"
-                            />
+                            <img src="../../../assets/img/icons/alternate_email.svg" alt="Tag someone"/>
                         </button>
                     </div>
                     <button

@@ -97,6 +97,7 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
             startWith(""),
             map((value: string | null) => (value ? this._filter(value) : [])),
         );
+        
     }
 
     ngAfterViewInit() {
@@ -158,11 +159,12 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
         this.isPickerVisible = !this.isPickerVisible;
         this.pickerContext = context;
         this.currentMessagePadnumber = padNr;
+        console.log(padNr)
     }
 
     addReactionToMessage(messagePadnr: string, emoji: string) {
         this.chatService
-            .addReaction(messagePadnr, emoji)
+            .addReaction(messagePadnr, emoji, 'chat', '')
             .then(() => console.log("Reaction added"))
             .catch((error) => console.error("Error adding reaction: ", error));
     }

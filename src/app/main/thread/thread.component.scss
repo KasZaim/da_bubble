@@ -96,6 +96,12 @@ header {
 .message:first-child {
     margin-top: 1.5rem;
 }
+.emoji-picker {
+    position: absolute;
+    z-index: 5;
+    left: 6rem;
+    bottom: 1rem;
+}
 
 .message-info {
     display: flex;

@@ -17,7 +17,7 @@ import { Observable } from "rxjs";
     providedIn: "root",
 })
 export class ThreadService {
-    constructor(private firestore: Firestore) {}
+    constructor(private firestore: Firestore) { }
 
     async sendThreadMessage(
         channelId: string,
@@ -41,6 +41,8 @@ export class ThreadService {
             createdAt: serverTimestamp(),
             reactions: message.reactions,
             padNumber: "",
+            btnReactions: [],
+            imageUrl: ''
         };
         await setDoc(newMessageRef, messageData);
     }

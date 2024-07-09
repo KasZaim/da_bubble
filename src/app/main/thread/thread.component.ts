@@ -14,11 +14,13 @@ import { ChatService } from "../chat/chat.service";
 import { Message } from "../../interfaces/message";
 import { FormsModule } from "@angular/forms";
 import { CurrentuserService } from "../../currentuser.service";
+import { EmojiModule } from "@ctrl/ngx-emoji-mart/ngx-emoji";
+import { PickerComponent } from "@ctrl/ngx-emoji-mart";
 
 @Component({
     selector: "app-thread",
     standalone: true,
-    imports: [MatButtonModule, CommonModule, RouterModule, FormsModule],
+    imports: [MatButtonModule, CommonModule, RouterModule, FormsModule, PickerComponent,EmojiModule],
     templateUrl: "./thread.component.html",
     styleUrls: ["./thread.component.scss"],
 })
@@ -29,6 +31,8 @@ export class ThreadComponent implements OnInit, OnChanges {
     messages: Message[] = [];
     messageText: string = "";
     isPickerVisible = false;
+    pickerContext: string = "";
+    currentMessagePadnumber: string = "";
 
     constructor(
         private chatService: ChatService,
@@ -57,6 +61,7 @@ export class ThreadComponent implements OnInit, OnChanges {
             .loadThreadMessages(this.channelId, this.messageId)
             .subscribe((messages) => {
                 this.messages = messages;
+                console.log(messages)
             });
     }
 
@@ -91,12 +96,41 @@ export class ThreadComponent implements OnInit, OnChanges {
         }
     }
 
-    togglePicker() {
+    togglePicker(context: string, padNr: any) {
         this.isPickerVisible = !this.isPickerVisible;
+        this.pickerContext = context;
+        this.currentMessagePadnumber = padNr;
+        
     }
 
     addEmoji(event: any) {
-        this.messageText += event.emoji.native;
+        if (this.pickerContext === "input") {
+            this.messageText += event.emoji.native;
+        } else if (this.pickerContext === "reaction") {
+            this.addReactionToMessage(
+                this.currentMessagePadnumber,
+                event.emoji.native,
+            );
+        }
+    }
+    addReactionToMessage(messagePadnr: string, emoji: string) {
+        console.log(this.messageId, messagePadnr)
+        this.chatService
+            .addReaction(this.messageId, emoji, 'thread',messagePadnr)
+            .then(() => console.log("Reaction added"))
+            .catch((error) => console.error("Error adding reaction: ", error));
+    }
+
+    addOrSubReaction(message: any, reaction: any) {
+        this.chatService.addOrSubReaction(message, reaction)
+    }
+
+    closePicker(event: Event) {
+        if (this.isPickerVisible) {
+            this.isPickerVisible = false;
+            this.pickerContext = "";
+            this.currentMessagePadnumber = "";
+        }
     }
 
     objectKeys(obj: any): string[] {

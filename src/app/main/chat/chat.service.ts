@@ -255,16 +255,32 @@ export class ChatService {
         this.openComponent = componentName;
     }
 
-    async addReaction(messagePadnr: string, emoji: string) {
-        const threadMessagesRef = collection(
-            this.firestore.firestore,
-            `channels/${this.currentChannelID}/messages`,
-        );
-        const messageRef = doc(threadMessagesRef, messagePadnr);
+    async addReaction(chatMessagePadnr: string, emoji: string, context: string, currentMessagePadnr: string) {
+        let collectionPath = '';
+        let pathNr = '';
+
+        switch (context) {
+            case 'chat':
+                collectionPath = `channels/${this.currentChannelID}/messages`;
+                pathNr = chatMessagePadnr;
+                break;
+            case 'thread':
+                collectionPath = `channels/${this.currentChannelID}/messages/${chatMessagePadnr}/threads`;
+                pathNr= currentMessagePadnr;
+                break;
+            case 'DM':
+                // collectionPath = `privateMessages/${this.currentUserID}/messages`;
+                break;
+            default:
+                console.error(`Unknown context: ${context}`);
+                return;
+        }
+        const threadMessagesRef = collection(this.firestore.firestore,collectionPath);
+        const messageRef = doc(threadMessagesRef, pathNr);
         const messageSnapshot = await getDoc(messageRef);
 
         if (!messageSnapshot.exists()) {
-            console.error(`Message with ID ${messagePadnr} not found`);
+            console.error(`Message with ID ${pathNr} not found`);
             return;
         }
 

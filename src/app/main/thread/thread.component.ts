@@ -7,6 +7,7 @@ import {
     Input,
     OnChanges,
     SimpleChanges,
+    HostListener,
 } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { RouterModule } from "@angular/router";
@@ -117,11 +118,16 @@ export class ThreadComponent implements OnInit, OnChanges {
         }
     }
 
-    togglePicker(context: string, padNr: any) {
+    @HostListener('window:resize', ['$event'])
+    onResize(event: Event) {
+        this.isPickerVisible = false;
+    }
+
+    togglePicker(context: string, padNr: any, event: MouseEvent) {
         this.isPickerVisible = !this.isPickerVisible;
         this.pickerContext = context;
         this.currentMessagePadnumber = padNr;
-        
+
     }
 
     addEmoji(event: any) {
@@ -142,8 +148,9 @@ export class ThreadComponent implements OnInit, OnChanges {
             .catch((error) => console.error("Error adding reaction: ", error));
     }
 
-    addOrSubReaction(message: any, reaction: any) {
-        this.chatService.addOrSubReaction(message, reaction)
+    addOrSubReaction(message: any, reaction: any, ) {
+        console.log(message, reaction)
+        this.chatService.addOrSubReaction(message, reaction, 'thread',this.messageId)
     }
 
     closePicker(event: Event) {

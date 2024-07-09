@@ -113,25 +113,27 @@
                                     <span>hat reagiert</span>
                                     }
                                 </div>
-                                <button mat-raised-button (click)="addOrSubReaction(message, reaction.key)"> <ngx-emoji
-                                        [emoji]="reaction.key"></ngx-emoji>
+                                <button mat-raised-button (click)="addOrSubReaction(message, reaction.key)"> 
+                                    <ngx-emoji [emoji]="reaction.key"></ngx-emoji>
                                     <span>
                                         {{reaction.key}}
-                                        {{reaction.value.count}}</span></button>
+                                        {{reaction.value.count}}
+                                    </span>
+                                </button>
                             </div>
-                            }
+                                }
                             }
                             <img src="../../../assets/img/icons/add_reaction.svg" alt="Add reaction"
-                                (click)="togglePicker('reaction',message.value.padNumber);$event.stopPropagation()" />
+                                (click)="togglePicker('reaction',message.value.padNumber, $event);$event.stopPropagation()" />
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="emoji-picker" *ngIf="isPickerVisible && pickerContext === 'reaction'">
+            
+            }
+            <div class="emoji-picker" *ngIf="isPickerVisible && pickerContext === 'reaction'" [ngStyle]="{ top: pickerPosition.top, left: pickerPosition.left }">
                 <emoji-mart (emojiClick)="addEmoji($event)"></emoji-mart>
             </div>
-            }
-            
 
             <!-- TODO: add focus textarea on click -->
         </div>
@@ -184,11 +186,11 @@
                         <!-- <button (click)="uploadFile(upload)">Upload</button> -->
 
                         <div class="vector"></div>
-                        <button mat-icon-button (click)="togglePicker('input', '');$event.stopPropagation()">
+                        <button mat-icon-button (click)="togglePicker('input', '',$event);$event.stopPropagation()">
                             <img src="../../../assets/img/icons/sentiment_satisfied.svg" alt="Add emoji" />
                         </button>
 
-                        <div class="emoji-picker" *ngIf="isPickerVisible && pickerContext === 'input'">
+                        <div class="emoji-picker" *ngIf="isPickerVisible && pickerContext === 'input'" style="bottom: 1rem; left: 3.5rem;">
                             <emoji-mart (emojiClick)="addEmoji($event)"></emoji-mart>
                         </div>
                         <button mat-icon-button (click)="addAtSymbol()">

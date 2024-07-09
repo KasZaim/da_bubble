@@ -1,4 +1,4 @@
-<main>
+<main (click)="closePicker($event)">
     <header>
         <div>
             <h1>Thread</h1>
@@ -7,43 +7,29 @@
                 <span>Entwicklerteam</span>
             </div>
         </div>
-        <button
-            class="closeButton"
-            (click)="closeThread()"
-            mat-icon-button
-        >
+        <button class="closeButton" (click)="closeThread()" mat-icon-button>
             <img src="../../../assets/img/icons/close.svg" />
         </button>
     </header>
     <div class="chat-body">
         <div class="chat">
             <div *ngFor="let message of messages; let i = index">
-                <div
-                    *ngIf="
+                <div *ngIf="
                         i === 0 || isLater(message.time, messages[i - 1]?.time)
-                    "
-                >
+                    ">
                     <div class="day-date">
                         <h2>{{ dayDate(message.time) }}</h2>
                         <div class="vector"></div>
                     </div>
                 </div>
-                <div
-                    class="message"
-                    [ngClass]="{
+                <div class="message" [ngClass]="{
                         'my-message': message.id === currentUser.currentUser.id,
-                    }"
-                >
-                    <img
-                        *ngIf="message.avatar.length > 1; else defaultAvatar"
-                        [src]="message.avatar"
-                    />
+                    }">
+                    <img *ngIf="message.avatar.length > 1; else defaultAvatar" [src]="message.avatar" />
                     <ng-template #defaultAvatar>
-                        <img
-                            src="../../../assets/img/avatar/{{
+                        <img src="../../../assets/img/avatar/{{
                                 message.avatar
-                            }}.svg"
-                        />
+                            }}.svg" />
                     </ng-template>
                     <div>
                         <div class="message-info">
@@ -59,7 +45,7 @@
                                     <div class="reaction-tooltip">
                                         <ngx-emoji [emoji]="reaction.key"></ngx-emoji>
                                         <span>{{reaction.key}}</span>
-    
+
                                         @for (user of reaction.value.users; track $index) {
                                         <p>{{user}}@if (reaction.value.users.length > 1) {
                                             ,
@@ -71,60 +57,49 @@
                                         <span>hat reagiert</span>
                                         }
                                     </div>
-                                    <button mat-raised-button (click)="addOrSubReaction(message, reaction.key)"> <ngx-emoji
-                                            [emoji]="reaction.key"></ngx-emoji>
+                                    <button mat-raised-button (click)="addOrSubReaction(message, reaction.key)">
+                                        <ngx-emoji [emoji]="reaction.key"></ngx-emoji>
                                         <span>
                                             {{reaction.key}}
                                             {{reaction.value.count}}</span></button>
                                 </div>
                                 }
                                 }
-                                <img src="../../../assets/img/icons/add_reaction.svg" alt="Add reaction" 
-                                (click)="togglePicker('reaction',message.padNumber); $event.stopPropagation()"/>
-                                <div class="emoji-picker" *ngIf="isPickerVisible && pickerContext === 'reaction'">
-                                    <emoji-mart (emojiClick)="addEmoji($event)"></emoji-mart>
-                                </div>
+                                <img src="../../../assets/img/icons/add_reaction.svg" alt="Add reaction"
+                                    (click)="togglePicker('reaction',message.padNumber,$event); $event.stopPropagation()" />
+
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <div class="emoji-picker" *ngIf="isPickerVisible && pickerContext === 'reaction'">
+            <emoji-mart (emojiClick)="addEmoji($event)"></emoji-mart>
+        </div>
         <div class="input-container">
             <div class="chat-input">
-                <textarea
-                    type="text"
-                    (keydown)="onKeydown($event)"
-                    [(ngModel)]="messageText"
-                    placeholder="Antworten..."
-                ></textarea>
+                <textarea type="text" (keydown)="onKeydown($event)" [(ngModel)]="messageText"
+                    placeholder="Antworten..."></textarea>
                 <div class="action-buttons">
                     <div class="button-wrapper">
                         <button mat-icon-button>
-                            <img
-                                src="../../../assets/img/icons/add-gray.svg"
-                                alt="Add image"
-                            />
+                            <img src="../../../assets/img/icons/add-gray.svg" alt="Add image" />
                         </button>
                         <div class="vector"></div>
-                        <button mat-icon-button (click)="togglePicker('input', '');$event.stopPropagation()">
+                        <button mat-icon-button (click)="togglePicker('input', '',$event);$event.stopPropagation()">
                             <img src="../../../assets/img/icons/sentiment_satisfied.svg" alt="Add emoji" />
                         </button>
-                        <div class="emoji-picker" *ngIf="isPickerVisible && pickerContext === 'input'">
+                        <div class="emoji-picker" *ngIf="isPickerVisible && pickerContext === 'input'"
+                            style="bottom: 1rem; left: 3.5rem;">
                             <emoji-mart (emojiClick)="addEmoji($event)"></emoji-mart>
                         </div>
                         <button mat-icon-button>
-                            <img src="../../../assets/img/icons/alternate_email.svg" alt="Tag someone"/>
+                            <img src="../../../assets/img/icons/alternate_email.svg" alt="Tag someone" />
                         </button>
                     </div>
-                    <button
-                        mat-icon-button
-                        (click)="send()"
-                    >
-                        <img
-                            src="../../../assets/img/icons/send-button.svg"
-                            alt="Send message"
-                        />
+                    <button mat-icon-button (click)="send()">
+                        <img src="../../../assets/img/icons/send-button.svg" alt="Send message" />
                     </button>
                 </div>
             </div>

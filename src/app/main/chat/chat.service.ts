@@ -46,6 +46,9 @@ export class ChatService {
         email: "",
         online: false,
     };
+    collectionPath = '';
+    pathNr = '';
+    
 
     constructor(
         public firestore: FirestoreService,
@@ -255,18 +258,17 @@ export class ChatService {
         this.openComponent = componentName;
     }
 
-    async addReaction(chatMessagePadnr: string, emoji: string, context: string, currentMessagePadnr: string) {
-        let collectionPath = '';
-        let pathNr = '';
-
+    checkContext(context:string, chatMessagePadnr :string, currentMessagePadnr : string){
+        
         switch (context) {
+            
             case 'chat':
-                collectionPath = `channels/${this.currentChannelID}/messages`;
-                pathNr = chatMessagePadnr;
+                this.collectionPath = `channels/${this.currentChannelID}/messages`;
+                this.pathNr = chatMessagePadnr;
                 break;
             case 'thread':
-                collectionPath = `channels/${this.currentChannelID}/messages/${chatMessagePadnr}/threads`;
-                pathNr= currentMessagePadnr;
+                this.collectionPath = `channels/${this.currentChannelID}/messages/${chatMessagePadnr}/threads`;
+                this.pathNr= currentMessagePadnr;
                 break;
             case 'DM':
                 // collectionPath = `privateMessages/${this.currentUserID}/messages`;
@@ -275,12 +277,16 @@ export class ChatService {
                 console.error(`Unknown context: ${context}`);
                 return;
         }
-        const threadMessagesRef = collection(this.firestore.firestore,collectionPath);
-        const messageRef = doc(threadMessagesRef, pathNr);
+    }
+    async addReaction(chatMessagePadnr: string, emoji: string, context: string, currentMessagePadnr: string) {
+       this.checkContext(context,chatMessagePadnr, currentMessagePadnr);
+
+        const threadMessagesRef = collection(this.firestore.firestore,this.collectionPath);
+        const messageRef = doc(threadMessagesRef, this.pathNr);
         const messageSnapshot = await getDoc(messageRef);
 
         if (!messageSnapshot.exists()) {
-            console.error(`Message with ID ${pathNr} not found`);
+            console.error(`Message with ID ${this.pathNr} not found`);
             return;
         }
 
@@ -296,17 +302,20 @@ export class ChatService {
             };
         }
 
-        messageData["reactions"][emoji].count++;
-        messageData["reactions"][emoji].users.push(this.currentUser.currentUser.name);
-        await updateDoc(messageRef, { reactions: messageData["reactions"] });
+        const reaction = messageData['reactions'][emoji];
+        const currentUserName = this.currentUser.currentUser.name;
+        if (!reaction.users.includes(currentUserName)) {
+            messageData["reactions"][emoji].count++;
+            messageData["reactions"][emoji].users.push(this.currentUser.currentUser.name);
+            await updateDoc(messageRef, { reactions: messageData["reactions"] });
+        }
+        
     }
 
-    async addOrSubReaction(message: any, reaction: string) {
-        const threadMessagesRef = collection(
-            this.firestore.firestore,
-            `channels/${this.currentChannelID}/messages`,
-        );
-        const messageRef = doc(threadMessagesRef, message.key);
+    async addOrSubReaction(message: any, reaction: string, context :string, chatMessagePadnr : string) {
+        this.checkContext(context, chatMessagePadnr,message.padNumber)
+        const threadMessagesRef = collection(this.firestore.firestore,this.collectionPath);
+        const messageRef = doc(threadMessagesRef, this.pathNr);
         const messageSnapshot = await getDoc(messageRef);
         if (!messageSnapshot.exists()) {
             console.error(`Message with ID ${message.key} not found`);
@@ -315,16 +324,6 @@ export class ChatService {
         const messageData = messageSnapshot.data();
         const currentUser = this.currentUser.currentUser.name;
 
-        // if (!messageData["reactions"]) {
-        //     messageData["reactions"] = {};
-        // }
-
-        // if (!messageData["reactions"][reaction]) {
-        //     messageData["reactions"][reaction] = {
-        //         count: 0,
-        //         users: []
-        //     };
-        // }
         if (!messageData["reactions"]) {
             messageData["reactions"] = {
                 count: 0,

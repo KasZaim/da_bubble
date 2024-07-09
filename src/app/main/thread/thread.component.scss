@@ -98,9 +98,7 @@ header {
 }
 .emoji-picker {
     position: absolute;
-    z-index: 5;
-    left: 6rem;
-    bottom: 1rem;
+    z-index: 500;
 }
 
 .message-info {
@@ -187,41 +185,6 @@ header {
         position: absolute;
     }
 }
-
-// .reaction {
-//     display: flex;
-//     gap: 0.5rem;
-//     align-items: center;
-
-//     > button {
-//         padding: 0.3125rem 0.625rem;
-//         border-radius: 1.25rem;
-//         border: 1px solid var(--light-purple-line);
-//         background: var(--white);
-//         box-shadow: unset;
-
-//         ::ng-deep::ng-deep .mdc-button__label {
-//             display: flex;
-//             align-items: center;
-//             gap: 0.625rem;
-
-//             > img {
-//                 width: 1.5rem;
-//                 height: 1.5rem;
-//             }
-
-//             > span {
-//                 font-size: 1rem;
-//             }
-//         }
-//     }
-
-//     > img {
-//         padding: 0.3125rem;
-//         width: 1.5rem;
-//         height: 1.5rem;
-//     }
-// }
 
 .reaction {
     display: flex;

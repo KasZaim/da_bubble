@@ -661,9 +661,7 @@
 
 .emoji-picker {
     position: absolute;
-    z-index: 5;
-    left: 6rem;
-    bottom: 1rem;
+    z-index: 1000;
 }
 
 .blank-chat {

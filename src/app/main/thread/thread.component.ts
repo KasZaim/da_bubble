@@ -7,6 +7,7 @@ import {
     Input,
     OnChanges,
     SimpleChanges,
+    HostListener,
 } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { RouterModule } from "@angular/router";
@@ -14,11 +15,13 @@ import { ChatService } from "../chat/chat.service";
 import { Message } from "../../interfaces/message";
 import { FormsModule } from "@angular/forms";
 import { CurrentuserService } from "../../currentuser.service";
+import { EmojiModule } from "@ctrl/ngx-emoji-mart/ngx-emoji";
+import { PickerComponent } from "@ctrl/ngx-emoji-mart";
 
 @Component({
     selector: "app-thread",
     standalone: true,
-    imports: [MatButtonModule, CommonModule, RouterModule, FormsModule],
+    imports: [MatButtonModule, CommonModule, RouterModule, FormsModule, PickerComponent,EmojiModule],
     templateUrl: "./thread.component.html",
     styleUrls: ["./thread.component.scss"],
 })
@@ -29,6 +32,8 @@ export class ThreadComponent implements OnInit, OnChanges {
     messages: Message[] = [];
     messageText: string = "";
     isPickerVisible = false;
+    pickerContext: string = "";
+    currentMessagePadnumber: string = "";
 
     constructor(
         private chatService: ChatService,
@@ -57,6 +62,7 @@ export class ThreadComponent implements OnInit, OnChanges {
             .loadThreadMessages(this.channelId, this.messageId)
             .subscribe((messages) => {
                 this.messages = messages;
+                console.log(messages)
             });
     }
 
@@ -83,6 +89,27 @@ export class ThreadComponent implements OnInit, OnChanges {
             this.loadMessages();
         }
     }
+    showTooltip(key: string, value: number) {
+        const tooltip = document.getElementById("customTooltip");
+        if (tooltip) {
+            const content = `<div> 
+                          <img src="../../../assets/img/icons/emoji-${key}.svg">
+                          <span>${value}</span> 
+                       </div>`;
+
+            tooltip.innerHTML = content;
+            tooltip.style.display = "block";
+            tooltip.style.left = `${+20}px`;
+            tooltip.style.top = `- 300px`;
+        }
+    }
+
+    hideTooltip() {
+        const tooltip = document.getElementById("customTooltip");
+        if (tooltip) {
+            tooltip.style.display = "none";
+        }
+    }
 
     onKeydown(event: KeyboardEvent) {
         if (event.key === "Enter" && !event.shiftKey) {
@@ -91,12 +118,47 @@ export class ThreadComponent implements OnInit, OnChanges {
         }
     }
 
-    togglePicker() {
+    @HostListener('window:resize', ['$event'])
+    onResize(event: Event) {
+        this.isPickerVisible = false;
+    }
+
+    togglePicker(context: string, padNr: any, event: MouseEvent) {
         this.isPickerVisible = !this.isPickerVisible;
+        this.pickerContext = context;
+        this.currentMessagePadnumber = padNr;
+
     }
 
     addEmoji(event: any) {
-        this.messageText += event.emoji.native;
+        if (this.pickerContext === "input") {
+            this.messageText += event.emoji.native;
+        } else if (this.pickerContext === "reaction") {
+            this.addReactionToMessage(
+                this.currentMessagePadnumber,
+                event.emoji.native,
+            );
+        }
+    }
+    addReactionToMessage(messagePadnr: string, emoji: string) {
+        console.log(this.messageId, messagePadnr)
+        this.chatService
+            .addReaction(this.messageId, emoji, 'thread',messagePadnr)
+            .then(() => console.log("Reaction added"))
+            .catch((error) => console.error("Error adding reaction: ", error));
+    }
+
+    addOrSubReaction(message: any, reaction: any, ) {
+        console.log(message, reaction)
+        this.chatService.addOrSubReaction(message, reaction, 'thread',this.messageId)
+    }
+
+    closePicker(event: Event) {
+        if (this.isPickerVisible) {
+            this.isPickerVisible = false;
+            this.pickerContext = "";
+            this.currentMessagePadnumber = "";
+        }
     }
 
     objectKeys(obj: any): string[] {

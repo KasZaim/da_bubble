@@ -7,6 +7,7 @@ import {
     AfterViewInit,
     AfterViewChecked,
     CUSTOM_ELEMENTS_SCHEMA,
+    HostListener,
 } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { MatButtonModule } from "@angular/material/button";
@@ -58,7 +59,7 @@ import { ImageService } from "../../image.service";
         HighlightMentionsPipe,
         PofileInfoCardComponent,
         EmojiModule,
-        
+
     ],
     templateUrl: "./chat.component.html",
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -73,7 +74,7 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
     @ViewChild("messageInput") messageInput!: ElementRef<HTMLInputElement>;
     @ViewChild("message") message!: ElementRef<HTMLInputElement>;
 
-    messagesArrayLength: number |undefined;
+    messagesArrayLength: number | undefined;
     messageText: string = "";
     isPickerVisible = false;
     pickerContext: string = "";
@@ -85,8 +86,9 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
     currentInputValue: string = "";
     previewUrl: string | ArrayBuffer | null = null;
     showModal: boolean = false;
-    showImageModal: "preview" | "chatImage"| string = '';
+    showImageModal: "preview" | "chatImage" | string = '';
     modalSrc: string | ArrayBuffer = '';
+    pickerPosition = { top: '0px', left: '0px' };
     constructor(
         public dialog: MatDialog,
         public chatService: ChatService,
@@ -97,17 +99,18 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
             startWith(""),
             map((value: string | null) => (value ? this._filter(value) : [])),
         );
+
     }
 
     ngAfterViewInit() {
         if (this.chatService.currentChannel.messages)
-        this.messagesArrayLength = this.chatService.currentChannel.messages.size
+            this.messagesArrayLength = this.chatService.currentChannel.messages.size
         this.scrollToBottom();
     }
 
     ngAfterViewChecked() {
         if (this.messagesArrayLength !== this.chatService.currentChannel.messages?.size)
-        this.scrollToBottom();
+            this.scrollToBottom();
     }
 
     toggleThread(channelId: string, messageId: string) {
@@ -154,15 +157,28 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
         }
     }
 
-    togglePicker(context: string, padNr: any) {
+    @HostListener('window:resize', ['$event'])
+    onResize(event: Event) {
+        this.isPickerVisible = false; 
+    }
+    togglePicker(context: string, padNr: any, event: MouseEvent) {
         this.isPickerVisible = !this.isPickerVisible;
         this.pickerContext = context;
         this.currentMessagePadnumber = padNr;
+        if (this.isPickerVisible) {
+            const pickerHeight = 350; // Geschätzte Höhe des Emoji-Pickers
+            const pickerWidth = 300; // Geschätzte Breite des Emoji-Pickers
+
+            let top = Math.min(event.clientY, window.innerHeight - pickerHeight);
+            let left = Math.min(event.clientX, window.innerWidth - pickerWidth);
+
+            this.pickerPosition = { top: `${top}px`, left: `${left}px` };
+        }
     }
 
     addReactionToMessage(messagePadnr: string, emoji: string) {
         this.chatService
-            .addReaction(messagePadnr, emoji)
+            .addReaction(messagePadnr, emoji, 'chat', '')
             .then(() => console.log("Reaction added"))
             .catch((error) => console.error("Error adding reaction: ", error));
     }
@@ -278,11 +294,11 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
         let imageUrl = '';
 
         if (this.previewUrl) {
-          const fileInput = document.getElementById('fileUpload') as HTMLInputElement;
-          imageUrl = await this.imageService.uploadFile(fileInput);
-          console.log(imageUrl)
-          this.clearPreview();
-          
+            const fileInput = document.getElementById('fileUpload') as HTMLInputElement;
+            imageUrl = await this.imageService.uploadFile(fileInput);
+            console.log(imageUrl)
+            this.clearPreview();
+
         }
         if (this.messageText.trim() !== "") {
             const message: Message = {
@@ -437,37 +453,37 @@ export class ChatComponent implements AfterViewInit, AfterViewChecked {
     }
 
     addOrSubReaction(message: any, reaction: any) {
-        this.chatService.addOrSubReaction(message, reaction)
+        this.chatService.addOrSubReaction(message, reaction, 'chat', message.key)
     }
 
     onFileSelected(event: Event) {
         const input = event.target as HTMLInputElement;
         if (input.files) {
-          const file = input.files[0];
-          const reader = new FileReader();
-          reader.onload = () => {
-            this.previewUrl = reader.result;
-          };
-          reader.readAsDataURL(file);
+            const file = input.files[0];
+            const reader = new FileReader();
+            reader.onload = () => {
+                this.previewUrl = reader.result;
+            };
+            reader.readAsDataURL(file);
         }
-        
-      }
-    
-      uploadFile(input: HTMLInputElement) {
+
+    }
+
+    uploadFile(input: HTMLInputElement) {
         this.imageService.uploadFile(input);
-      }
+    }
 
-      clearPreview() {
+    clearPreview() {
         this.previewUrl = null;
-      }
+    }
 
-      openModal(modalURL: string | ArrayBuffer) {
+    openModal(modalURL: string | ArrayBuffer) {
         this.modalSrc = modalURL;
         this.showModal = true;
-      }
-    
-      closeModal() {
+    }
+
+    closeModal() {
         this.showModal = false;
-      }
+    }
 
 }

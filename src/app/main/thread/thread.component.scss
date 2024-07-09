@@ -188,10 +188,49 @@ header {
     }
 }
 
+// .reaction {
+//     display: flex;
+//     gap: 0.5rem;
+//     align-items: center;
+
+//     > button {
+//         padding: 0.3125rem 0.625rem;
+//         border-radius: 1.25rem;
+//         border: 1px solid var(--light-purple-line);
+//         background: var(--white);
+//         box-shadow: unset;
+
+//         ::ng-deep::ng-deep .mdc-button__label {
+//             display: flex;
+//             align-items: center;
+//             gap: 0.625rem;
+
+//             > img {
+//                 width: 1.5rem;
+//                 height: 1.5rem;
+//             }
+
+//             > span {
+//                 font-size: 1rem;
+//             }
+//         }
+//     }
+
+//     > img {
+//         padding: 0.3125rem;
+//         width: 1.5rem;
+//         height: 1.5rem;
+//     }
+// }
+
 .reaction {
     display: flex;
     gap: 0.5rem;
     align-items: center;
+}
+
+.reaction-wrapper {
+    position: relative;
 
     > button {
         padding: 0.3125rem 0.625rem;
@@ -221,7 +260,45 @@ header {
         width: 1.5rem;
         height: 1.5rem;
     }
+
+    &:hover > div {
+        display: flex;
+    }
 }
+
+.reaction-tooltip {
+    display: none;
+    position: absolute;
+    width: 8rem;
+    padding: 1rem;
+    left: 2.25rem;
+    bottom: 2.25rem;
+    background-color: #444df2;
+    border-radius: 1.875rem 1.875rem 1.875rem 0rem;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 0.25rem;
+
+    > span {
+        font-size: 1rem;
+        font-weight: 700;
+        color: white;
+    }
+
+    > p {
+        font-size: 1rem;
+        font-weight: 400;
+        color: white;
+        text-align: center;
+    }
+
+    > img {
+        width: 1.875rem;
+        height: 1.875rem;
+    }
+}
+
 
 .chat-input {
     display: flex;

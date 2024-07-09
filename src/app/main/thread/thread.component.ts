@@ -88,6 +88,27 @@ export class ThreadComponent implements OnInit, OnChanges {
             this.loadMessages();
         }
     }
+    showTooltip(key: string, value: number) {
+        const tooltip = document.getElementById("customTooltip");
+        if (tooltip) {
+            const content = `<div> 
+                          <img src="../../../assets/img/icons/emoji-${key}.svg">
+                          <span>${value}</span> 
+                       </div>`;
+
+            tooltip.innerHTML = content;
+            tooltip.style.display = "block";
+            tooltip.style.left = `${+20}px`;
+            tooltip.style.top = `- 300px`;
+        }
+    }
+
+    hideTooltip() {
+        const tooltip = document.getElementById("customTooltip");
+        if (tooltip) {
+            tooltip.style.display = "none";
+        }
+    }
 
     onKeydown(event: KeyboardEvent) {
         if (event.key === "Enter" && !event.shiftKey) {

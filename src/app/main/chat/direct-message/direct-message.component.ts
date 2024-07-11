@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core";
+import { Component, ElementRef, Input, ViewChild } from "@angular/core";
 import { ChatComponent } from "../chat.component";
 import { PickerComponent } from "@ctrl/ngx-emoji-mart";
 import { MatDialog, MatDialogModule } from "@angular/material/dialog";
@@ -12,13 +12,15 @@ import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { serverTimestamp } from "@angular/fire/firestore";
 import { PofileInfoCardComponent } from "../../../pofile-info-card/pofile-info-card.component";
 import { DialogAddMemberToChnlComponent } from "../../../dialog-add-member-to-chnl/dialog-add-member-to-chnl.component";
-import { FormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule,FormControl } from "@angular/forms";
 import { Message } from "../../../interfaces/message";
 import { DirectmessageService } from "./directmessage.service";
 import { MatMenuModule } from "@angular/material/menu";
 import { ChatService } from "../chat.service";
 import { CurrentuserService } from "../../../currentuser.service";
 import { ImageService } from "../../../image.service";
+import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from "@angular/material/autocomplete";
+import { map, Observable, startWith } from "rxjs";
 
 @Component({
     selector: "app-direct-message",
@@ -34,6 +36,9 @@ import { ImageService } from "../../../image.service";
         MatButtonToggleModule,
         FormsModule,
         MatMenuModule,
+        ReactiveFormsModule,
+        MatAutocompleteModule
+        
     ],
 
     templateUrl: "./direct-message.component.html",
@@ -42,6 +47,10 @@ import { ImageService } from "../../../image.service";
 export class DirectMessageComponent {
     isPickerVisible = false;
     messageText: string = "";
+    formCtrl = new FormControl();
+    filteredMembers: Observable<UsersList[]>;
+    currentInputValue: string = "";
+    @ViewChild("messageInput") messageInput!: ElementRef<HTMLInputElement>;
 
     constructor(
         public dialog: MatDialog,
@@ -49,8 +58,13 @@ export class DirectMessageComponent {
         public chatService: ChatService,
         public currentUser: CurrentuserService,
         public imageService: ImageService,
-    ) {}
-    ngOnInit() {}
+    ) {
+        this.filteredMembers = this.formCtrl.valueChanges.pipe(
+            startWith(""),
+            map((value: string | null) => (value ? this._filter(value) : [])),
+        );
+    }
+    
     objectKeys(obj: any): string[] {
         return Object.keys(obj);
     }
@@ -163,5 +177,46 @@ export class DirectMessageComponent {
             event.preventDefault(); // Verhindert den Zeilenumbruch
             this.send(); // Nachricht senden
         }
+    }
+    
+    onInputChange(event: Event): void {
+        const input = event.target as HTMLInputElement;
+        this.currentInputValue = input.value;
+    }
+
+    selected(event: MatAutocompleteSelectedEvent): void {
+        const selectedUserName = event.option.viewValue;
+        this.formCtrl.setValue("", { emitEvent: false });
+        this.messageText = this.currentInputValue + `${selectedUserName} `;
+        this.currentInputValue = this.messageText;
+        this.messageInput.nativeElement.focus();
+    }
+
+    private _filter(value: string): UsersList[] {
+        if (this.mentionUser(value)) {
+            const filterValue = value
+                .slice(value.lastIndexOf("@") + 1)
+                .toLowerCase();
+            return this.chatService.usersList.filter((user) =>
+                user.name.toLowerCase().includes(filterValue),
+            );
+        } else {
+            return [];
+        }
+    }
+
+    mentionUser(value: string): boolean {
+        const atIndex = value.lastIndexOf("@");
+        if (atIndex === -1) return false;
+        const charAfterAt = value.charAt(atIndex + 1);
+        return charAfterAt !== " ";
+    }
+
+    addAtSymbol() {
+        if (this.messageText.slice(-1) !== "@") {
+            this.messageText += "@";
+            this.currentInputValue += "@";
+        }
+        this.messageInput.nativeElement.focus();
     }
 }

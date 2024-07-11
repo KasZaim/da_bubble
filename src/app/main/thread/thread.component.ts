@@ -8,20 +8,31 @@ import {
     OnChanges,
     SimpleChanges,
     HostListener,
+    ViewChild,
+    ElementRef,
 } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { RouterModule } from "@angular/router";
 import { ChatService } from "../chat/chat.service";
 import { Message } from "../../interfaces/message";
-import { FormsModule } from "@angular/forms";
+import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";;
 import { CurrentuserService } from "../../currentuser.service";
 import { EmojiModule } from "@ctrl/ngx-emoji-mart/ngx-emoji";
 import { PickerComponent } from "@ctrl/ngx-emoji-mart";
+import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from "@angular/material/autocomplete";
+import { map, Observable, startWith } from "rxjs";
+import { UsersList } from "../../interfaces/users-list";
 
 @Component({
     selector: "app-thread",
     standalone: true,
-    imports: [MatButtonModule, CommonModule, RouterModule, FormsModule, PickerComponent,EmojiModule],
+    imports: [MatButtonModule, CommonModule, 
+    RouterModule, 
+    FormsModule, 
+    PickerComponent,
+    EmojiModule,
+    MatAutocompleteModule,
+    ReactiveFormsModule],
     templateUrl: "./thread.component.html",
     styleUrls: ["./thread.component.scss"],
 })
@@ -29,16 +40,25 @@ export class ThreadComponent implements OnInit, OnChanges {
     @Input() channelId!: string;
     @Input() messageId!: string;
     @Output() threadClose = new EventEmitter<boolean>();
+    @ViewChild("messageInput") messageInput!: ElementRef<HTMLInputElement>;
     messages: Message[] = [];
     messageText: string = "";
     isPickerVisible = false;
     pickerContext: string = "";
     currentMessagePadnumber: string = "";
+    currentInputValue: string = "";
+    formCtrl = new FormControl();
+    filteredMembers: Observable<UsersList[]>;
 
     constructor(
         private chatService: ChatService,
         public currentUser: CurrentuserService,
-    ) {}
+    ) {
+        this.filteredMembers = this.formCtrl.valueChanges.pipe(
+            startWith(""),
+            map((value: string | null) => (value ? this._filter(value) : [])),
+        );
+    }
 
     ngOnInit() {
         this.loadMessages();
@@ -62,7 +82,6 @@ export class ThreadComponent implements OnInit, OnChanges {
             .loadThreadMessages(this.channelId, this.messageId)
             .subscribe((messages) => {
                 this.messages = messages;
-                console.log(messages)
             });
     }
 
@@ -116,6 +135,47 @@ export class ThreadComponent implements OnInit, OnChanges {
             event.preventDefault();
             this.send();
         }
+    }
+
+    onInputChange(event: Event): void {
+        const input = event.target as HTMLInputElement;
+        this.currentInputValue = input.value;
+    }
+
+    selected(event: MatAutocompleteSelectedEvent): void {
+        const selectedUserName = event.option.viewValue;
+        this.formCtrl.setValue("", { emitEvent: false });
+        this.messageText = this.currentInputValue + `${selectedUserName} `;
+        this.currentInputValue = this.messageText;
+        this.messageInput.nativeElement.focus();
+    }
+
+    private _filter(value: string): UsersList[] {
+        if (this.mentionUser(value)) {
+            const filterValue = value
+                .slice(value.lastIndexOf("@") + 1)
+                .toLowerCase();
+            return this.chatService.usersList.filter((user) =>
+                user.name.toLowerCase().includes(filterValue),
+            );
+        } else {
+            return [];
+        }
+    }
+
+    mentionUser(value: string): boolean {
+        const atIndex = value.lastIndexOf("@");
+        if (atIndex === -1) return false;
+        const charAfterAt = value.charAt(atIndex + 1);
+        return charAfterAt !== " ";
+    }
+
+    addAtSymbol() {
+        if (this.messageText.slice(-1) !== "@") {
+            this.messageText += "@";
+            this.currentInputValue += "@";
+        }
+        this.messageInput.nativeElement.focus();
     }
 
     @HostListener('window:resize', ['$event'])

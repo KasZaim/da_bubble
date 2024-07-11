@@ -79,7 +79,11 @@
         </div>
         <div class="input-container">
             <div class="chat-input">
-                <textarea type="text" (keydown)="onKeydown($event)" [(ngModel)]="messageText"
+                <!-- <textarea #messageInput type="text" (keydown)="onKeydown($event)" (input)="onInputChange($event)" [(ngModel)]="messageText"
+                 placeholder="Antworten..." [formControl]="formCtrl"
+                 [matAutocomplete]="auto"></textarea> -->
+                 <textarea #messageInput matInput (input)="onInputChange($event)" [formControl]="formCtrl"
+                    [matAutocomplete]="auto" type="text" (keydown)="onKeydown($event)" [(ngModel)]="messageText"
                     placeholder="Antworten..."></textarea>
                 <div class="action-buttons">
                     <div class="button-wrapper">
@@ -94,7 +98,7 @@
                             style="bottom: 1rem; left: 3.5rem;">
                             <emoji-mart (emojiClick)="addEmoji($event)"></emoji-mart>
                         </div>
-                        <button mat-icon-button>
+                        <button mat-icon-button (click)="addAtSymbol()">
                             <img src="../../../assets/img/icons/alternate_email.svg" alt="Tag someone" />
                         </button>
                     </div>
@@ -103,6 +107,18 @@
                     </button>
                 </div>
             </div>
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+                <mat-option *ngFor="let option of filteredMembers | async" [value]="option.name">
+                    @if (option.avatar && option.avatar.length > 1) {
+                    <img src="{{ option.avatar }}" />
+                    } @else {
+                    <img src="../../assets/img/avatar/{{
+                                option.avatar
+                            }}.svg" />
+                    }
+                    <h3>{{ option.name }}</h3>
+                </mat-option>
+            </mat-autocomplete>
         </div>
         <!-- TODO: add focus textarea on click -->
     </div>

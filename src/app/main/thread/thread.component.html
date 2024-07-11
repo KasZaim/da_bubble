@@ -79,9 +79,6 @@
         </div>
         <div class="input-container">
             <div class="chat-input">
-                <!-- <textarea #messageInput type="text" (keydown)="onKeydown($event)" (input)="onInputChange($event)" [(ngModel)]="messageText"
-                 placeholder="Antworten..." [formControl]="formCtrl"
-                 [matAutocomplete]="auto"></textarea> -->
                  <textarea #messageInput matInput (input)="onInputChange($event)" [formControl]="formCtrl"
                     [matAutocomplete]="auto" type="text" (keydown)="onKeydown($event)" [(ngModel)]="messageText"
                     placeholder="Antworten..."></textarea>

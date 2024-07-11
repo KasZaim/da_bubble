@@ -209,7 +209,7 @@ export class ThreadComponent implements OnInit, OnChanges {
     }
 
     addOrSubReaction(message: any, reaction: any, ) {
-        console.log(message, reaction)
+        console.log(message.padNumber, reaction)
         this.chatService.addOrSubReaction(message, reaction, 'thread',this.messageId)
     }
 

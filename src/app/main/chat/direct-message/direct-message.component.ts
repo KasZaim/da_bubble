@@ -21,13 +21,14 @@ import { CurrentuserService } from "../../../currentuser.service";
 import { ImageService } from "../../../image.service";
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from "@angular/material/autocomplete";
 import { map, Observable, startWith } from "rxjs";
-
+import { EmojiModule } from "@ctrl/ngx-emoji-mart/ngx-emoji";
 @Component({
     selector: "app-direct-message",
     standalone: true,
     imports: [
         ChatComponent,
         PickerComponent,
+        EmojiModule,
         MatButtonModule,
         MatIconModule,
         CommonModule,
@@ -51,6 +52,8 @@ export class DirectMessageComponent {
     filteredMembers: Observable<UsersList[]>;
     currentInputValue: string = "";
     @ViewChild("messageInput") messageInput!: ElementRef<HTMLInputElement>;
+    pickerContext: string = "";
+    currentMessagePadnumber: string = "";
 
     constructor(
         public dialog: MatDialog,
@@ -72,8 +75,11 @@ export class DirectMessageComponent {
     log() {
         console.log();
     }
-    togglePicker() {
+    togglePicker(context: string, padNr: any, event: MouseEvent) {
         this.isPickerVisible = !this.isPickerVisible;
+        this.pickerContext = context;
+        this.currentMessagePadnumber = padNr;
+
     }
     closePicker(event: Event) {
         if (this.isPickerVisible) {
@@ -81,8 +87,27 @@ export class DirectMessageComponent {
         }
     }
     addEmoji(event: any) {
-        this.messageText += event.emoji.native;
+        if (this.pickerContext === "input") {
+            this.messageText += event.emoji.native;
+        } else if (this.pickerContext === "reaction") {
+            this.addReactionToMessage(
+                this.currentMessagePadnumber,
+                event.emoji.native,
+            );
+        }
     }
+    addReactionToMessage(messagePadnr: string, emoji: string) {
+        this.chatService
+            .addReaction(this.chatService.selectedUser.id, emoji, 'DM',messagePadnr)
+            .then(() => console.log("Reaction added"))
+            .catch((error) => console.error("Error adding reaction: ", error));
+    }
+
+    addOrSubReaction(message: any, reaction: any, ) {
+        debugger
+        this.chatService.addOrSubReaction(message, reaction, 'DM',this.chatService.selectedUser.id)
+    }
+
     openDialogChannelInfo() {
         this.dialog.open(DialogChannelInfoComponent, {
             panelClass: "custom-dialog-br",

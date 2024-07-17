@@ -271,7 +271,8 @@ export class ChatService {
                 this.pathNr= currentMessagePadnr;
                 break;
             case 'DM':
-                // collectionPath = `privateMessages/${this.currentUserID}/messages`;
+                this.collectionPath = `users/${this.currentUser.currentUserUid}/${chatMessagePadnr}`;
+                this.pathNr = currentMessagePadnr;
                 break;
             default:
                 console.error(`Unknown context: ${context}`);
@@ -284,13 +285,14 @@ export class ChatService {
         const threadMessagesRef = collection(this.firestore.firestore,this.collectionPath);
         const messageRef = doc(threadMessagesRef, this.pathNr);
         const messageSnapshot = await getDoc(messageRef);
-
+        
         if (!messageSnapshot.exists()) {
             console.error(`Message with ID ${this.pathNr} not found`);
             return;
         }
 
         const messageData = messageSnapshot.data();
+        console.log(messageData)
         if (!messageData["reactions"]) {
             messageData["reactions"] = {};
         }
@@ -313,7 +315,11 @@ export class ChatService {
     }
 
     async addOrSubReaction(message: any, reaction: string, context :string, chatMessagePadnr : string) {
-        this.checkContext(context, chatMessagePadnr,message.padNumber)
+        if (context === 'DM') {
+            this.checkContext(context, chatMessagePadnr,message)
+        }else{
+            this.checkContext(context, chatMessagePadnr,message.padNumber)
+        }
         const threadMessagesRef = collection(this.firestore.firestore,this.collectionPath);
         const messageRef = doc(threadMessagesRef, this.pathNr);
         const messageSnapshot = await getDoc(messageRef);

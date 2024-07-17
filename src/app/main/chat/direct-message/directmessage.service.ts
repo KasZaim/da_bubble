@@ -28,7 +28,9 @@ export class DirectmessageService {
         public currentUser: CurrentuserService,
         private firestore: FirestoreService,
         private chat: ChatService,
-    ) {}
+    ) {
+        console.log(this.messages)
+    }
 
     async sendMessage(sendedUserID: string, message: Message) {
         this.sendedUserID = sendedUserID;
@@ -81,8 +83,6 @@ export class DirectmessageService {
                 const messageData = doc.data() as Message;
                 this.messages[doc.id] = messageData;
             });
-
-            console.log(this.messages);
         });
     }
 

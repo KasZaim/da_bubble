@@ -128,25 +128,7 @@
                     <img src="{{ chatService.selectedUser.avatar }}" />
                     } @else {
                     <img src="../../../../assets/img/avatar/{{
-        <div class="blank-chat">
-            <div class="blank-info">
-                <div>
-                    @if (chatService.selectedUser.avatar.length > 1) {
-                    <img src="{{ chatService.selectedUser.avatar }}" />
-                    } @else {
-                    <img src="../../../../assets/img/avatar/{{
                                     chatService.selectedUser.avatar
-                                }}.svg" alt="" />
-                    }
-                    <h1>{{ chatService.selectedUser.name }}</h1>
-                </div>
-                <span>Diese Unterhaltung findet nur zwischen
-                    <button (click)="openProfileCard()">
-                        &#64;{{ chatService.selectedUser.name }}
-                    </button>
-                    und dir statt.</span>
-            </div>
-        </div>
                                 }}.svg" alt="" />
                     }
                     <h1>{{ chatService.selectedUser.name }}</h1>
@@ -185,23 +167,9 @@
                     </div>
                     <button (click)="send()" mat-icon-button>
                         <img src="../../../assets/img/icons/send-button.svg" alt="Send message" />
-                    <button (click)="send()" mat-icon-button>
-                        <img src="../../../assets/img/icons/send-button.svg" alt="Send message" />
                     </button>
                 </div>
             </div>
-            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-                <mat-option *ngFor="let option of filteredMembers | async" [value]="option.name">
-                    @if (option.avatar && option.avatar.length > 1) {
-                    <img src="{{ option.avatar }}" />
-                    } @else {
-                    <img src="../../assets/img/avatar/{{
-                                option.avatar
-                            }}.svg" />
-                    }
-                    <h3>{{ option.name }}</h3>
-                </mat-option>
-            </mat-autocomplete>
             <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
                 <mat-option *ngFor="let option of filteredMembers | async" [value]="option.name">
                     @if (option.avatar && option.avatar.length > 1) {

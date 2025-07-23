@@ -45,7 +45,9 @@ Thumbs.db
 .firebase
 *-debug.log
 .runtimeconfig.json
-/src/app/app.config.ts
+
+# Environment files with sensitive data
+/src/environments/environment.ts
 
 
 #firebase functions

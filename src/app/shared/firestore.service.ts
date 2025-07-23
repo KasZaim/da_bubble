@@ -6,7 +6,7 @@ import { Router } from "@angular/router";
 import { signInWithPopup, signOut, updateEmail } from "@angular/fire/auth";
 import { User } from "../interfaces/user";
 import { getDatabase, onDisconnect, onValue, ref, set } from "@angular/fire/database";
-import { firebaseConfig } from "../app.config";
+import { environment } from "../../environments/environment";
 import { initializeApp } from "@angular/fire/app";
 
 @Injectable({
@@ -22,8 +22,8 @@ export class FirestoreService {
   channelsRef: CollectionReference<DocumentData>;
   private userStatusDatabaseRef: any;
   private heartbeatInterval: any;
-  app = initializeApp(firebaseConfig);
-  db = getDatabase(this.app, "https://dabubble-2a68b-default-rtdb.europe-west1.firebasedatabase.app");
+  app = initializeApp(environment.firebase);
+  db = getDatabase(this.app, environment.firebase.databaseURL);
 
 
   constructor(private router: Router) {
